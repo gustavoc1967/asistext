@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AsistEXT — Extensión Universitaria UPE</title>
+<meta name="theme-color" content="#1B3A6B">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<script src="jsbarcode.all.min.js"></script>
+<style>
+:root{
+  --azul:#1B3A6B; --azul-osc:#122A50; --ambar:#D98E04; --ambar-cl:#FDF3DC;
+  --papel:#F5F6F8; --tarjeta:#FFFFFF; --tinta:#1A2433; --gris:#5B6676; --linea:#DDE2EA;
+  --verde:#1E7D46; --verde-cl:#E2F3E8; --rojo:#B3261E; --rojo-cl:#FBEAE9;
+  --amarillo:#9A6B00; --amarillo-cl:#FFF4D6; --violeta:#5B3E96; --violeta-cl:#EEE8FA;
+  --radio:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--papel);color:var(--tinta);font-size:15px;line-height:1.45;padding-bottom:76px}
+h1,h2,h3{line-height:1.2}
+button{font-family:inherit;cursor:pointer;border:none}
+input,select,textarea{font-family:inherit;font-size:15px;width:100%;padding:10px 12px;border:1.5px solid var(--linea);border-radius:8px;background:#fff;color:var(--tinta)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--azul)}
+label{display:block;font-size:12.5px;font-weight:600;color:var(--gris);margin:12px 0 4px;text-transform:uppercase;letter-spacing:.04em}
+
+/* Cabecera institucional */
+.cabecera{background:linear-gradient(160deg,var(--azul) 0%,var(--azul-osc) 100%);color:#fff;padding:14px 16px 12px;display:flex;align-items:center;gap:12px}
+.cabecera img.logo{width:46px;height:46px;object-fit:contain;background:#fff;border-radius:8px;padding:3px}
+.cabecera .logo-ph{width:46px;height:46px;border-radius:8px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;letter-spacing:.02em;border:1.5px dashed rgba(255,255,255,.5)}
+.cabecera .tit{flex:1;min-width:0}
+.cabecera .tit .app{font-size:19px;font-weight:800;letter-spacing:.01em}
+.cabecera .tit .app span{color:var(--ambar)}
+.cabecera .tit .inst{font-size:11px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Navegación inferior */
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--linea);display:flex;z-index:50;padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;background:none;padding:9px 2px 8px;font-size:10.5px;font-weight:600;color:var(--gris);display:flex;flex-direction:column;align-items:center;gap:3px}
+nav button .ic{font-size:20px;line-height:1}
+nav button.act{color:var(--azul)}
+nav button.act .ic{transform:scale(1.1)}
+
+/* Vistas y tarjetas */
+.vista{display:none;padding:14px 14px 20px;max-width:760px;margin:0 auto}
+.vista.act{display:block}
+.tarjeta{background:var(--tarjeta);border:1px solid var(--linea);border-radius:var(--radio);padding:14px;margin-bottom:12px}
+.tarjeta h3{font-size:16px;margin-bottom:8px}
+.fila{display:flex;gap:10px;align-items:center}
+.fila>*{flex:1}
+.sep{border:none;border-top:1px solid var(--linea);margin:14px 0}
+
+/* Botones */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--azul);color:#fff;font-weight:700;font-size:14.5px;padding:11px 16px;border-radius:9px;width:100%;transition:opacity .15s}
+.btn:active{opacity:.8}
+.btn.sec{background:#fff;color:var(--azul);border:1.5px solid var(--azul)}
+.btn.peligro{background:var(--rojo)}
+.btn.exito{background:var(--verde)}
+.btn.ambar{background:var(--ambar);color:#3A2A00}
+.btn.mini{width:auto;padding:7px 12px;font-size:13px;border-radius:7px}
+.btn:disabled{opacity:.45;cursor:default}
+
+/* Chips de estado */
+.chip{display:inline-block;font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px;letter-spacing:.03em}
+.chip.abierta{background:var(--verde-cl);color:var(--verde)}
+.chip.cerrada{background:#E8EBF1;color:var(--gris)}
+.chip.encurso{background:var(--ambar-cl);color:var(--amarillo)}
+.chip.completo{background:var(--verde-cl);color:var(--verde)}
+.chip.pendiente{background:var(--rojo-cl);color:var(--rojo)}
+.chip.regularizado{background:var(--violeta-cl);color:var(--violeta)}
+
+/* Semáforo de avance */
+.sem{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.sem.v{background:var(--verde)}.sem.a{background:#E0A800}.sem.r{background:var(--rojo)}
+.barra{height:8px;background:#E8EBF1;border-radius:6px;overflow:hidden;margin-top:5px}
+.barra>div{height:100%;border-radius:6px;background:var(--azul);transition:width .3s}
+
+/* Listas */
+.item{display:flex;align-items:center;gap:10px;padding:11px 4px;border-bottom:1px solid var(--linea)}
+.item:last-child{border-bottom:none}
+.item .cuerpo{flex:1;min-width:0}
+.item .cuerpo .l1{font-weight:700;font-size:14.5px}
+.item .cuerpo .l2{font-size:12.5px;color:var(--gris)}
+.vacio{text-align:center;color:var(--gris);padding:26px 10px;font-size:14px}
+.vacio b{display:block;color:var(--tinta);margin-bottom:4px}
+
+/* Panel de escaneo */
+.panel-escaneo{background:var(--azul-osc);border-radius:var(--radio);padding:14px;color:#fff;margin-bottom:12px}
+.panel-escaneo video{width:100%;border-radius:8px;background:#000;max-height:300px;object-fit:cover}
+.modo-toggle{display:flex;background:rgba(255,255,255,.12);border-radius:9px;padding:3px;margin-bottom:10px}
+.modo-toggle button{flex:1;background:none;color:#fff;font-weight:700;font-size:14px;padding:9px;border-radius:7px;opacity:.7}
+.modo-toggle button.act{background:var(--ambar);color:#3A2A00;opacity:1}
+.resultado-scan{border-radius:9px;padding:12px;margin-top:10px;font-weight:700;text-align:center;font-size:15px}
+.resultado-scan.ok{background:var(--verde);color:#fff}
+.resultado-scan.err{background:var(--rojo);color:#fff}
+.resultado-scan.info{background:var(--ambar);color:#3A2A00}
+
+/* Modal */
+.velo{display:none;position:fixed;inset:0;background:rgba(12,20,35,.55);z-index:100;align-items:flex-end;justify-content:center}
+.velo.act{display:flex}
+.modal{background:#fff;width:100%;max-width:560px;max-height:88vh;overflow-y:auto;border-radius:16px 16px 0 0;padding:18px 16px 24px}
+.modal h3{font-size:17px;margin-bottom:4px}
+.modal .sub{font-size:13px;color:var(--gris);margin-bottom:10px}
+
+/* Tablas de informe */
+table.rep{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+table.rep th{background:var(--azul);color:#fff;padding:7px 8px;text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.03em}
+table.rep td{padding:7px 8px;border-bottom:1px solid var(--linea);vertical-align:top}
+table.rep tr:nth-child(even) td{background:#FAFBFD}
+.tabla-scroll{overflow-x:auto;margin:0 -14px;padding:0 14px}
+
+/* Carnets */
+.grid-carnets{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.carnet{background:#fff;border:1.5px solid var(--azul);border-radius:12px;overflow:hidden;page-break-inside:avoid}
+.carnet .franja{background:var(--azul);color:#fff;padding:8px 12px;display:flex;align-items:center;gap:8px}
+.carnet .franja img{width:30px;height:30px;object-fit:contain;background:#fff;border-radius:5px;padding:2px}
+.carnet .franja .t{font-size:10px;line-height:1.25}
+.carnet .franja .t b{display:block;font-size:11px}
+.carnet .datos{padding:10px 12px 4px;display:flex;gap:10px;align-items:center}
+.carnet .datos .foto{width:58px;height:70px;object-fit:cover;border-radius:6px;border:1.5px solid var(--linea);flex-shrink:0}
+.carnet .datos .foto-ph{width:58px;height:70px;border-radius:6px;border:1.5px dashed var(--linea);background:#F0F2F6;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--gris);flex-shrink:0}
+.carnet .datos .nom{font-weight:800;font-size:16px}
+.carnet .datos .car{font-size:12px;color:var(--gris)}
+.avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.avatar-ph{width:40px;height:40px;border-radius:50%;background:#E4E8F0;color:var(--gris);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0}
+.scan-foto{width:52px;height:52px;border-radius:8px;object-fit:cover;border:2px solid rgba(255,255,255,.7);flex-shrink:0}
+.carnet svg{display:block;margin:0 auto}
+.carnet .pie{background:var(--ambar-cl);color:var(--amarillo);font-size:9.5px;font-weight:700;text-align:center;padding:4px;letter-spacing:.05em}
+
+/* Constancia (impresión) */
+.constancia{background:#fff;border:1px solid var(--linea);border-radius:var(--radio);padding:26px 28px;max-width:760px;margin:0 auto}
+.constancia .enc{display:flex;align-items:center;gap:14px;border-bottom:2.5px solid var(--azul);padding-bottom:12px;margin-bottom:16px}
+.constancia .enc img{width:58px;height:58px;object-fit:contain}
+.constancia .enc .t{font-size:12px;line-height:1.4}
+.constancia .enc .t b{font-size:14px;color:var(--azul)}
+.constancia h2{text-align:center;font-size:17px;color:var(--azul);margin:10px 0 14px;text-transform:uppercase;letter-spacing:.06em}
+.constancia .firmas{display:flex;gap:40px;margin-top:54px}
+.constancia .firmas div{flex:1;border-top:1px solid var(--tinta);text-align:center;font-size:12px;padding-top:5px;color:var(--gris)}
+.solo-print{display:none}
+@media print{
+  body{background:#fff;padding:0}
+  .cabecera,nav,.no-print{display:none!important}
+  .vista{display:none!important;padding:0}
+  .vista.print-obj{display:block!important;max-width:none}
+  .tarjeta{border:none;padding:0}
+  .solo-print{display:block}
+  .grid-carnets{grid-template-columns:repeat(2,1fr);gap:8mm}
+}
+.aviso{background:var(--ambar-cl);border:1px solid #E8D5A0;border-radius:9px;padding:10px 12px;font-size:13px;color:#6B4E00;margin-bottom:12px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.kpi{background:var(--tarjeta);border:1px solid var(--linea);border-radius:var(--radio);padding:10px;text-align:center}
+.kpi .num{font-size:21px;font-weight:800;color:var(--azul)}
+.kpi .lbl{font-size:10.5px;color:var(--gris);text-transform:uppercase;letter-spacing:.04em;font-weight:700}
+</style>
+</head>
+<body>
+
+<header class="cabecera">
+  <img class="logo" id="logoCab" style="display:none" alt="Logo">
+  <div class="logo-ph" id="logoPh">UPE</div>
+  <div class="tit">
+    <div class="app">Asist<span>EXT</span></div>
+    <div class="inst" id="instCab">Facultad de Ciencias Administrativas y Contables — Filial Hernandarias</div>
+  </div>
+</header>
+
+<!-- ============ VISTA REGISTRO ============ -->
+<section class="vista act" id="v-registro">
+  <div class="tarjeta">
+    <label>Actividad en curso</label>
+    <select id="selActividad" onchange="cambiarActividadActiva()"></select>
+    <div id="infoActividadSel" style="margin-top:8px;font-size:13px;color:var(--gris)"></div>
+  </div>
+
+  <div class="panel-escaneo" id="panelEscaneo" style="display:none">
+    <div class="modo-toggle">
+      <button id="btnModoEnt" class="act" onclick="setModoRegistro('entrada')">▶ ENTRADA</button>
+      <button id="btnModoSal" onclick="setModoRegistro('salida')">◀ SALIDA</button>
+    </div>
+    <video id="videoScan" playsinline muted style="display:none"></video>
+    <button class="btn ambar" id="btnCamara" onclick="toggleCamara()">📷 Activar cámara</button>
+    <label style="color:#C8D2E4;margin-top:12px">Ingreso manual (legajo + Enter)</label>
+    <input id="inputManual" inputmode="text" autocomplete="off" placeholder="Escribir legajo…">
+    <div style="font-size:12px;color:#9FB2D8;margin-top:6px">🔌 <b>Lector USB conectado (OTG o laptop):</b> escaneá directamente, sin tocar la pantalla. Un beep agudo confirma el registro.</div>
+    <div id="resScan" class="resultado-scan" style="display:none"></div>
+  </div>
+
+  <div class="tarjeta" id="tarjetaPresentes" style="display:none">
+    <h3>En la actividad <span id="cntPresentes" class="chip encurso"></span></h3>
+    <div id="listaPresentes"></div>
+  </div>
+</section>
+
+<!-- ============ VISTA ACTIVIDADES ============ -->
+<section class="vista" id="v-actividades">
+  <button class="btn" onclick="abrirModalActividad()" style="margin-bottom:12px">＋ Nueva actividad</button>
+  <div class="tarjeta"><div id="listaActividades"></div></div>
+</section>
+
+<!-- ============ VISTA ALUMNOS ============ -->
+<section class="vista" id="v-alumnos">
+  <div class="fila" style="margin-bottom:12px">
+    <button class="btn" onclick="abrirModalAlumno()">＋ Alumno</button>
+    <button class="btn sec" onclick="abrirModalImportar()">⇪ Importar lista</button>
+  </div>
+  <div class="tarjeta">
+    <input id="buscarAlumno" placeholder="Buscar por nombre o legajo…" oninput="renderAlumnos()">
+    <div id="listaAlumnos" style="margin-top:8px"></div>
+  </div>
+  <button class="btn sec no-print" onclick="prepararCarnets()">🖨 Ver / imprimir carnets</button>
+</section>
+
+<!-- ============ VISTA CARNETS (impresión) ============ -->
+<section class="vista" id="v-carnets">
+  <div class="no-print" style="margin-bottom:12px">
+    <button class="btn" onclick="window.print()">🖨 Imprimir carnets</button>
+    <button class="btn sec" onclick="irVista('v-alumnos')" style="margin-top:8px">← Volver</button>
+  </div>
+  <div class="grid-carnets" id="gridCarnets"></div>
+</section>
+
+<!-- ============ VISTA INFORMES ============ -->
+<section class="vista" id="v-informes">
+  <div class="tarjeta no-print">
+    <label>Tipo de informe</label>
+    <select id="tipoInforme" onchange="renderInforme()">
+      <option value="actividad">Por actividad</option>
+      <option value="alumno">Por alumno (avance de horas)</option>
+      <option value="periodo">Por período / proyecto</option>
+    </select>
+    <div id="filtrosInforme"></div>
+  </div>
+  <div id="cuerpoInforme"></div>
+</section>
+
+<!-- ============ VISTA CONSTANCIA (impresión) ============ -->
+<section class="vista" id="v-constancia">
+  <div class="no-print" style="margin-bottom:12px">
+    <button class="btn" onclick="window.print()">🖨 Imprimir constancia</button>
+    <button class="btn sec" onclick="irVista('v-informes')" style="margin-top:8px">← Volver</button>
+  </div>
+  <div id="cuerpoConstancia"></div>
+</section>
+
+<!-- ============ VISTA CONFIGURACIÓN ============ -->
+<section class="vista" id="v-config">
+  <div class="tarjeta">
+    <h3>Institución</h3>
+    <label>Universidad</label><input id="cfgUni">
+    <label>Facultad</label><input id="cfgFac">
+    <label>Filial / sede</label><input id="cfgFilial">
+    <label>Responsable de extensión</label><input id="cfgResp">
+    <label>Logo institucional</label>
+    <input type="file" id="cfgLogo" accept="image/*" onchange="cargarLogo(this)">
+    <div id="logoPrev" style="margin-top:8px"></div>
+  </div>
+  <div class="tarjeta">
+    <h3>Reglas de acreditación</h3>
+    <label>Meta de horas de extensión (por alumno)</label><input id="cfgMeta" type="number" min="1">
+    <label>Tolerancia de entrada (minutos)</label><input id="cfgTol" type="number" min="0">
+    <label>Redondeo de tiempo (minutos por bloque)</label>
+    <select id="cfgRed"><option value="1">Sin redondeo</option><option value="15">Bloques de 15 min</option><option value="30">Bloques de 30 min</option></select>
+  </div>
+  <div class="tarjeta">
+    <h3>Padrón compartido</h3>
+    <p style="font-size:13px;color:var(--gris);margin-bottom:10px">Archivo común a AsistEXT, CarnetEXT y CertEXT: lleva legajos, cédulas, nombres, carreras y fotos de un aplicativo a otro.</p>
+    <button class="btn sec" onclick="exportarPadron(false)">⬇ Exportar padrón compartido</button>
+    <button class="btn ambar" style="margin-top:8px" onclick="exportarPadron(true)">📤 Compartir padrón…</button>
+    <label style="margin-top:14px">Importar padrón (de CarnetEXT, CertEXT o compartido)</label>
+    <input type="file" id="archivoPadronCompartido" accept=".json" onchange="importarPadronCompartido(this)">
+  </div>
+  <div class="tarjeta">
+    <h3>Respaldo de datos</h3>
+    <p style="font-size:13px;color:var(--gris);margin-bottom:10px">Al cerrar cada actividad se descarga un respaldo automático. Desde aquí podés generar uno completo, compartirlo a Google Drive o restaurar datos.</p>
+    <button class="btn" onclick="descargarBackup(false)">⬇ Descargar respaldo completo</button>
+    <button class="btn ambar" onclick="compartirBackup()" style="margin-top:8px">📤 Compartir a Drive…</button>
+    <label style="margin-top:14px">Restaurar desde archivo</label>
+    <input type="file" id="archivoRestaurar" accept=".json" onchange="restaurarBackup(this)">
+  </div>
+  <button class="btn" onclick="guardarConfig()">💾 Guardar configuración</button>
+</section>
+
+<nav>
+  <button class="act" data-v="v-registro" onclick="irVista('v-registro')"><span class="ic">🎫</span>Registro</button>
+  <button data-v="v-actividades" onclick="irVista('v-actividades')"><span class="ic">📅</span>Actividades</button>
+  <button data-v="v-alumnos" onclick="irVista('v-alumnos')"><span class="ic">👥</span>Alumnos</button>
+  <button data-v="v-informes" onclick="irVista('v-informes')"><span class="ic">📊</span>Informes</button>
+  <button data-v="v-config" onclick="irVista('v-config')"><span class="ic">⚙️</span>Config</button>
+</nav>
+
+<!-- Modales -->
+<div class="velo" id="veloModal" onclick="if(event.target===this)cerrarModal()">
+  <div class="modal" id="cuerpoModal"></div>
+</div>
+
+<script>
+/* ================================================================
+   PADRÓN COMPARTIDO — formato común a AsistEXT, CarnetEXT y CertEXT
+   Permite que los legajos, nombres, carreras, fotos y contactos
+   viajen entre los tres aplicativos con un solo archivo.
+   Persona normalizada:
+   {doc, tipoDoc:'legajo'|'cedula', nombre, carrera, institucion, foto, tel, email}
+================================================================ */
+const PADRON_FORMATO='padron_ext', PADRON_VERSION=1;
+
+function personaNormalizada(o){
+  return {
+    doc:String(o.doc??o.legajo??'').trim(),
+    tipoDoc:(o.tipoDoc==='cedula')?'cedula':'legajo',
+    nombre:String(o.nombre||'').trim(),
+    carrera:String(o.carrera||'').trim(),
+    institucion:String(o.institucion||'').trim(),
+    foto:o.foto||'', tel:String(o.tel||'').trim(), email:String(o.email||'').trim()
+  };
+}
+
+/* Lee cualquier archivo de los tres aplicativos y devuelve un padrón normalizado */
+function leerPadronUniversal(d){
+  if(!d || typeof d!=='object') throw new Error('El archivo no tiene un formato reconocible.');
+  let crudas=null, origen='desconocido';
+  if(d.app===PADRON_FORMATO && Array.isArray(d.personas)){ crudas=d.personas; origen='padrón compartido'; }
+  else if(Array.isArray(d.personas)){ crudas=d.personas; origen='CertEXT'; }
+  else if(Array.isArray(d.alumnos)){ crudas=d.alumnos; origen = d.app==='carnetext' ? 'CarnetEXT' : 'AsistEXT'; }
+  if(!crudas) throw new Error('El archivo no contiene un padrón de personas.');
+  const vistos=new Set(), personas=[];
+  crudas.forEach(o=>{
+    const p=personaNormalizada(o);
+    if(!p.doc || !p.nombre) return;
+    const clave=p.tipoDoc+'|'+p.doc;
+    if(vistos.has(clave)) return;
+    vistos.add(clave); personas.push(p);
+  });
+  return {personas, origen, config:d.config||null};
+}
+
+/* Fusiona una persona entrante sobre una existente.
+   Regla: los datos académicos (nombre, carrera, institución) se actualizan
+   desde el padrón entrante; los datos curados localmente (foto, teléfono,
+   correo) solo se completan si estaban vacíos, para no perder trabajo hecho. */
+function fusionarPersona(destino, origen){
+  let cambios=0;
+  ['nombre','carrera','institucion'].forEach(k=>{
+    if(origen[k] && origen[k]!==destino[k]){ destino[k]=origen[k]; cambios++; }
+  });
+  ['foto','tel','email'].forEach(k=>{
+    if(origen[k] && !destino[k]){ destino[k]=origen[k]; cambios++; }
+  });
+  return cambios;
+}
+
+/* Arma el archivo de padrón compartido para exportar */
+function armarPadronCompartido(personas, config){
+  const datos={
+    app:PADRON_FORMATO, version:PADRON_VERSION, generado:new Date().toISOString(),
+    config:config?{uni:config.uni, fac:config.fac, filial:config.filial,
+                   logo:config.logoUni||config.logo||'', logoCarrera:config.logoCarrera||''}:null,
+    personas:personas.map(personaNormalizada)
+  };
+  const stamp=new Date().toISOString().slice(0,16).replace('T','_').replace(':','');
+  return {blob:new Blob([JSON.stringify(datos,null,1)],{type:'application/json'}),
+          nombre:`padron_compartido_${stamp}.json`};
+}
+
+function bajarArchivo(blob, nombre){
+  const el=document.createElement('a'); el.href=URL.createObjectURL(blob); el.download=nombre;
+  document.body.appendChild(el); el.click(); el.remove();
+  setTimeout(()=>URL.revokeObjectURL(el.href),4000);
+}
+async function compartirArchivo(blob, nombre, titulo){
+  const f=new File([blob], nombre, {type:'application/json'});
+  if(navigator.canShare && navigator.canShare({files:[f]})){
+    try{ await navigator.share({files:[f], title:titulo}); return true; }catch(e){ return false; }
+  }
+  bajarArchivo(blob, nombre); return false;
+}
+/* ================================================================
+   AsistEXT — Registro de asistencia a Extensión Universitaria
+   UPE · Facultad de Ciencias Administrativas y Contables · Hernandarias
+   Estado, persistencia, configuración, padrón y carnets
+================================================================ */
+const CLAVE = 'asistext_v1';
+
+let DB = {
+  config: {
+    uni: 'Universidad Privada del Este',
+    fac: 'Facultad de Ciencias Administrativas y Contables',
+    filial: 'Filial Hernandarias',
+    resp: '',
+    logo: '',            // dataURL base64
+    metaHoras: 100,
+    toleranciaMin: 10,
+    redondeoMin: 15
+  },
+  alumnos: [],           // {id, legajo, nombre, carrera}
+  actividades: [],       // {id, nombre, tipo, proyecto, fecha, lugar, responsable, horas, hIni, hFin, estado:'abierta'|'cerrada', cerradaEn}
+  registros: []          // {id, actId, alumnoId, entrada, salida, estado, minutos, audit:{por,fecha,motivo}}
+};
+
+function guardar(){ localStorage.setItem(CLAVE, JSON.stringify(DB)); }
+function cargarDB(){
+  try{
+    const raw = localStorage.getItem(CLAVE);
+    if(raw){ const d = JSON.parse(raw); DB = Object.assign(DB, d); DB.config = Object.assign({
+      uni:'Universidad Privada del Este', fac:'Facultad de Ciencias Administrativas y Contables',
+      filial:'Filial Hernandarias', resp:'', logo:'', metaHoras:100, toleranciaMin:10, redondeoMin:15
+    }, d.config||{}); }
+  }catch(e){ console.error('Error al cargar datos', e); }
+}
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const esc = s => String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtFecha = iso => { if(!iso) return '—'; const [a,m,d]=iso.split('-'); return `${d}/${m}/${a}`; };
+const fmtHoraTS = ts => ts ? new Date(ts).toLocaleTimeString('es-PY',{hour:'2-digit',minute:'2-digit'}) : '—';
+const fmtHs = min => { const h=Math.floor(min/60), m=min%60; return m? `${h} h ${m} min` : `${h} h`; };
+const hoyISO = () => { const d=new Date(); return d.toISOString().slice(0,10); };
+
+/* ---------- Navegación ---------- */
+function irVista(id){
+  document.querySelectorAll('.vista').forEach(v=>{v.classList.remove('act');v.classList.remove('print-obj');});
+  document.getElementById(id).classList.add('act');
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('act', b.dataset.v===id));
+  if(id==='v-registro') renderRegistro();
+  if(id==='v-actividades') renderActividades();
+  if(id==='v-alumnos') renderAlumnos();
+  if(id==='v-informes') renderInforme();
+  if(id==='v-config') cargarFormConfig();
+}
+function marcarParaImpresion(id){
+  document.querySelectorAll('.vista').forEach(v=>v.classList.remove('print-obj'));
+  document.getElementById(id).classList.add('print-obj');
+}
+
+/* ---------- Modal genérico ---------- */
+function abrirModal(html){ document.getElementById('cuerpoModal').innerHTML = html; document.getElementById('veloModal').classList.add('act'); }
+function cerrarModal(){ document.getElementById('veloModal').classList.remove('act'); detenerCamaraBarrido(); }
+
+/* ---------- Configuración ---------- */
+function cargarFormConfig(){
+  const c = DB.config;
+  cfgUni.value=c.uni; cfgFac.value=c.fac; cfgFilial.value=c.filial; cfgResp.value=c.resp;
+  cfgMeta.value=c.metaHoras; cfgTol.value=c.toleranciaMin; cfgRed.value=String(c.redondeoMin);
+  logoPrev.innerHTML = c.logo ? `<img src="${c.logo}" style="height:64px;border:1px solid var(--linea);border-radius:8px;padding:4px;background:#fff">` : '<span style="font-size:13px;color:var(--gris)">Sin logo cargado</span>';
+}
+function guardarConfig(){
+  const c = DB.config;
+  c.uni=cfgUni.value.trim(); c.fac=cfgFac.value.trim(); c.filial=cfgFilial.value.trim(); c.resp=cfgResp.value.trim();
+  c.metaHoras=Math.max(1, parseInt(cfgMeta.value)||100);
+  c.toleranciaMin=Math.max(0, parseInt(cfgTol.value)||0);
+  c.redondeoMin=parseInt(cfgRed.value)||1;
+  guardar(); aplicarIdentidad(); alert('Configuración guardada.');
+}
+function cargarLogo(inp){
+  const f = inp.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const MAX=420, k=Math.min(1, MAX/Math.max(img.width,img.height));
+      const cv=document.createElement('canvas'); cv.width=Math.round(img.width*k); cv.height=Math.round(img.height*k);
+      cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+      DB.config.logo = cv.toDataURL('image/png'); guardar(); aplicarIdentidad(); cargarFormConfig();
+    };
+    img.src = r.result;
+  };
+  r.readAsDataURL(f);
+}
+function aplicarIdentidad(){
+  const c=DB.config;
+  instCab.textContent = `${c.fac} — ${c.filial}`;
+  if(c.logo){ logoCab.src=c.logo; logoCab.style.display='block'; logoPh.style.display='none'; }
+  else { logoCab.style.display='none'; logoPh.style.display='flex'; }
+}
+
+/* ---------- Padrón de alumnos ---------- */
+let fotoTemp='';
+function abrirModalAlumno(al){
+  fotoTemp = al&&al.foto ? al.foto : '';
+  abrirModal(`
+    <h3>${al?'Editar alumno':'Nuevo alumno'}</h3>
+    <label>Nº de legajo / matrícula</label><input id="mLegajo" value="${al?esc(al.legajo):''}" ${al?'readonly style="background:#F0F2F6"':''}>
+    <label>Apellido y nombre</label><input id="mNombre" value="${al?esc(al.nombre):''}">
+    <label>Carrera</label><input id="mCarrera" value="${al?esc(al.carrera):''}" placeholder="Ej.: Administración de Empresas">
+    <label>Foto del alumno (opcional)</label>
+    <input type="file" id="mFoto" accept="image/*" onchange="cargarFotoAlumno(this)">
+    <div id="mFotoPrev" style="margin-top:8px">${fotoTemp?fotoPreviewHTML():''}</div>
+    <div class="fila" style="margin-top:16px">
+      <button class="btn sec" onclick="cerrarModal()">Cancelar</button>
+      <button class="btn" onclick="guardarAlumno('${al?al.id:''}')">Guardar</button>
+    </div>
+    ${al?`<button class="btn peligro" style="margin-top:8px" onclick="eliminarAlumno('${al.id}')">Eliminar alumno</button>`:''}
+  `);
+}
+function fotoPreviewHTML(){
+  return `<div class="fila" style="align-items:center"><img src="${fotoTemp}" style="width:64px;height:78px;object-fit:cover;border-radius:8px;border:1px solid var(--linea);flex:none">
+  <button class="btn mini peligro" style="flex:none" onclick="quitarFotoTemp()">Quitar foto</button></div>`;
+}
+function quitarFotoTemp(){ fotoTemp=''; document.getElementById('mFotoPrev').innerHTML=''; document.getElementById('mFoto').value=''; }
+function cargarFotoAlumno(inp){
+  const f=inp.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    const img=new Image();
+    img.onload=()=>{
+      const MAX=360, k=Math.min(1, MAX/Math.max(img.width,img.height));
+      const cv=document.createElement('canvas'); cv.width=Math.round(img.width*k); cv.height=Math.round(img.height*k);
+      cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+      fotoTemp=cv.toDataURL('image/jpeg',0.8);
+      document.getElementById('mFotoPrev').innerHTML=fotoPreviewHTML();
+    };
+    img.src=r.result;
+  };
+  r.readAsDataURL(f);
+}
+function guardarAlumno(id){
+  const legajo=mLegajo.value.trim(), nombre=mNombre.value.trim(), carrera=mCarrera.value.trim();
+  if(!legajo||!nombre){ alert('Legajo y nombre son obligatorios.'); return; }
+  if(!id && DB.alumnos.some(a=>a.legajo===legajo)){ alert('Ya existe un alumno con ese legajo.'); return; }
+  if(id){ const a=DB.alumnos.find(x=>x.id===id); a.nombre=nombre; a.carrera=carrera; a.foto=fotoTemp; }
+  else DB.alumnos.push({id:uid(), legajo, nombre, carrera, foto:fotoTemp});
+  guardar(); cerrarModal(); renderAlumnos();
+}
+function iniciales(nombre){ return nombre.split(/[\s,]+/).filter(Boolean).slice(0,2).map(p=>p[0].toUpperCase()).join(''); }
+function eliminarAlumno(id){
+  if(DB.registros.some(r=>r.alumnoId===id)){ alert('No se puede eliminar: el alumno tiene registros de asistencia.'); return; }
+  if(!confirm('¿Eliminar este alumno del padrón?')) return;
+  DB.alumnos = DB.alumnos.filter(a=>a.id!==id); guardar(); cerrarModal(); renderAlumnos();
+}
+function abrirModalImportar(){
+  abrirModal(`
+    <h3>Importar lista de alumnos</h3>
+    <p class="sub">Pegá una línea por alumno con el formato:<br><b>legajo;apellido y nombre;carrera</b></p>
+    <textarea id="mImport" rows="8" placeholder="1023;Benítez, Carlos;Administración de Empresas&#10;1041;Ríos, Marta;Contaduría Pública"></textarea>
+    <div class="fila" style="margin-top:16px">
+      <button class="btn sec" onclick="cerrarModal()">Cancelar</button>
+      <button class="btn" onclick="importarLista()">Importar</button>
+    </div>
+  `);
+}
+function importarLista(){
+  let ok=0, dup=0, mal=0;
+  mImport.value.split('\n').map(l=>l.trim()).filter(Boolean).forEach(l=>{
+    const p=l.split(';').map(x=>x.trim());
+    if(p.length<2||!p[0]||!p[1]){ mal++; return; }
+    if(DB.alumnos.some(a=>a.legajo===p[0])){ dup++; return; }
+    DB.alumnos.push({id:uid(), legajo:p[0], nombre:p[1], carrera:p[2]||''}); ok++;
+  });
+  guardar(); cerrarModal(); renderAlumnos();
+  alert(`Importación: ${ok} agregados · ${dup} duplicados omitidos · ${mal} líneas inválidas.`);
+}
+function renderAlumnos(){
+  const q=(buscarAlumno.value||'').toLowerCase();
+  const lista=DB.alumnos.filter(a=>!q||a.nombre.toLowerCase().includes(q)||a.legajo.toLowerCase().includes(q))
+    .sort((a,b)=>a.nombre.localeCompare(b.nombre));
+  listaAlumnos.innerHTML = lista.length ? lista.map(a=>{
+    const min=horasAcumuladas(a.id);
+    const av = a.foto ? `<img class="avatar" src="${a.foto}">` : `<div class="avatar-ph">${iniciales(a.nombre)}</div>`;
+    return `<div class="item" onclick="abrirModalAlumno(DB.alumnos.find(x=>x.id==='${a.id}'))">
+      ${av}<div class="cuerpo"><div class="l1">${esc(a.nombre)}</div>
+      <div class="l2">${a.tipoDoc==='cedula'?'C.I.':'Legajo'} ${esc(a.legajo)}${(a.carrera||a.institucion)?' · '+esc(a.carrera||a.institucion):''} · ${fmtHs(min)} acreditadas</div></div>
+      <span style="color:var(--gris)">›</span></div>`;
+  }).join('') : `<div class="vacio"><b>Padrón vacío</b>Agregá alumnos o importá una lista.</div>`;
+}
+
+/* ---------- Padrón compartido con CarnetEXT y CertEXT ---------- */
+function importarPadronCompartido(inp){
+  const f=inp.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const {personas, origen, config}=leerPadronUniversal(JSON.parse(r.result));
+      if(config && config.logo && !DB.config.logo) DB.config.logo=config.logo;
+      let nuevos=0, actualizados=0;
+      personas.forEach(p=>{
+        const ex=DB.alumnos.find(x=>String(x.legajo)===p.doc && (x.tipoDoc||'legajo')===p.tipoDoc);
+        if(ex){
+          const destino={nombre:ex.nombre, carrera:ex.carrera||'', institucion:ex.institucion||'', foto:ex.foto||'', tel:ex.tel||'', email:ex.email||''};
+          if(fusionarPersona(destino,p)){ Object.assign(ex,destino); actualizados++; }
+        } else {
+          DB.alumnos.push({id:uid(), legajo:p.doc, tipoDoc:p.tipoDoc, nombre:p.nombre, carrera:p.carrera,
+                           institucion:p.institucion, foto:p.foto, tel:p.tel, email:p.email}); nuevos++;
+        }
+      });
+      guardar(); aplicarIdentidad(); renderAlumnos();
+      alert(`Padrón importado desde ${origen}.\n${nuevos} persona(s) nueva(s) · ${actualizados} actualizada(s).`);
+    }catch(e){ alert('No se pudo importar: '+e.message); }
+    inp.value='';
+  };
+  r.readAsText(f);
+}
+function exportarPadron(compartir){
+  if(!DB.alumnos.length){ alert('El padrón está vacío.'); return; }
+  const personas=DB.alumnos.map(a=>({doc:a.legajo, tipoDoc:a.tipoDoc||'legajo', nombre:a.nombre,
+    carrera:a.carrera||'', institucion:a.institucion||'', foto:a.foto||'', tel:a.tel||'', email:a.email||''}));
+  const {blob,nombre}=armarPadronCompartido(personas, DB.config);
+  if(compartir) compartirArchivo(blob,nombre,'Padrón compartido');
+  else { bajarArchivo(blob,nombre); alert(`Padrón exportado: ${nombre}\n${personas.length} persona(s), con fotos.\nSe puede importar en CarnetEXT y CertEXT.`); }
+}
+
+/* ---------- Carnets ---------- */
+function prepararCarnets(){
+  if(!DB.alumnos.length){ alert('No hay alumnos en el padrón.'); return; }
+  const c=DB.config;
+  gridCarnets.innerHTML = DB.alumnos.slice().sort((a,b)=>a.nombre.localeCompare(b.nombre)).map(a=>`
+    <div class="carnet">
+      <div class="franja">${c.logo?`<img src="${c.logo}">`:''}<div class="t"><b>${esc(c.uni)}</b>${esc(c.fac)} · ${esc(c.filial)}</div></div>
+      <div class="datos">${a.foto?`<img class="foto" src="${a.foto}">`:`<div class="foto-ph">👤</div>`}<div><div class="nom">${esc(a.nombre)}</div><div class="car">${esc(a.carrera||a.institucion)||'Extensión Universitaria'} · ${a.tipoDoc==='cedula'?'C.I.':'Legajo'} ${esc(a.legajo)}</div></div></div>
+      <svg class="cb" data-leg="${esc(a.legajo)}"></svg>
+      <div class="pie">CREDENCIAL DE EXTENSIÓN UNIVERSITARIA</div>
+    </div>`).join('');
+  document.querySelectorAll('#gridCarnets svg.cb').forEach(svg=>{
+    try{ JsBarcode(svg, svg.dataset.leg, {format:'CODE128', height:52, width:2, fontSize:13, margin:6}); }
+    catch(e){ svg.outerHTML = `<div style="color:var(--rojo);font-size:12px;text-align:center;padding:8px">No se pudo generar el código (¿sin conexión para cargar JsBarcode?)</div>`; }
+  });
+  irVista('v-carnets'); marcarParaImpresion('v-carnets');
+}
+/* ================================================================
+   Actividades, escaneo, entrada/salida, cierre con barrido,
+   regularización y cálculo de horas
+================================================================ */
+const TIPOS_ACT = ['Charla / conferencia','Capacitación / taller','Servicio comunitario','Feria / exposición','Jornada académica','Campaña solidaria','Otro'];
+
+/* ---------- ABM de actividades ---------- */
+function abrirModalActividad(act){
+  abrirModal(`
+    <h3>${act?'Editar actividad':'Nueva actividad de extensión'}</h3>
+    <label>Nombre de la actividad</label><input id="mActNom" value="${act?esc(act.nombre):''}" placeholder="Ej.: Feria de emprendedores 2026">
+    <label>Tipo</label><select id="mActTipo">${TIPOS_ACT.map(t=>`<option ${act&&act.tipo===t?'selected':''}>${t}</option>`).join('')}</select>
+    <label>Proyecto / programa</label><input id="mActProy" value="${act?esc(act.proyecto):''}" placeholder="Ej.: Vinculación con la comunidad">
+    <label>Fecha</label><input id="mActFecha" type="date" value="${act?act.fecha:hoyISO()}">
+    <div class="fila">
+      <div><label>Hora inicio</label><input id="mActIni" type="time" value="${act?act.hIni:'08:00'}"></div>
+      <div><label>Hora fin</label><input id="mActFin" type="time" value="${act?act.hFin:'12:00'}"></div>
+    </div>
+    <label>Horas acreditables (máximo por alumno)</label><input id="mActHoras" type="number" step="0.5" min="0.5" value="${act?act.horas:4}">
+    <label>Lugar</label><input id="mActLugar" value="${act?esc(act.lugar):''}">
+    <label>Responsable</label><input id="mActResp" value="${act?esc(act.responsable):esc(DB.config.resp)}">
+    <div class="fila" style="margin-top:16px">
+      <button class="btn sec" onclick="cerrarModal()">Cancelar</button>
+      <button class="btn" onclick="guardarActividad('${act?act.id:''}')">Guardar</button>
+    </div>
+  `);
+}
+function guardarActividad(id){
+  const nombre=mActNom.value.trim();
+  if(!nombre){ alert('El nombre es obligatorio.'); return; }
+  const datos={nombre, tipo:mActTipo.value, proyecto:mActProy.value.trim(), fecha:mActFecha.value||hoyISO(),
+    hIni:mActIni.value||'08:00', hFin:mActFin.value||'12:00',
+    horas:Math.max(0.5, parseFloat(mActHoras.value)||1), lugar:mActLugar.value.trim(), responsable:mActResp.value.trim()};
+  if(datos.hFin<=datos.hIni){ alert('La hora de fin debe ser posterior a la de inicio.'); return; }
+  if(id){ Object.assign(DB.actividades.find(a=>a.id===id), datos); }
+  else DB.actividades.push(Object.assign({id:uid(), estado:'abierta', cerradaEn:null}, datos));
+  guardar(); cerrarModal(); renderActividades(); renderRegistro();
+}
+function renderActividades(){
+  const lista=DB.actividades.slice().sort((a,b)=> (b.fecha+b.hIni).localeCompare(a.fecha+a.hIni));
+  listaActividades.innerHTML = lista.length ? lista.map(a=>{
+    const regs=DB.registros.filter(r=>r.actId===a.id);
+    const pend=regs.filter(r=>r.estado==='PENDIENTE').length;
+    return `<div class="item" onclick="verActividad('${a.id}')">
+      <div class="cuerpo">
+        <div class="l1">${esc(a.nombre)} <span class="chip ${a.estado}">${a.estado.toUpperCase()}</span></div>
+        <div class="l2">${fmtFecha(a.fecha)} · ${a.hIni}–${a.hFin} · ${a.horas} hs acreditables · ${regs.length} registro(s)${pend?` · <b style="color:var(--rojo)">${pend} pendiente(s)</b>`:''}</div>
+      </div><span style="color:var(--gris)">›</span></div>`;
+  }).join('') : `<div class="vacio"><b>Sin actividades</b>Creá la primera actividad de extensión.</div>`;
+}
+function verActividad(id){
+  const a=DB.actividades.find(x=>x.id===id);
+  const regs=DB.registros.filter(r=>r.actId===id).sort((x,y)=>(x.entrada||0)-(y.entrada||0));
+  const filas = regs.length ? regs.map(r=>{
+    const al=DB.alumnos.find(x=>x.id===r.alumnoId)||{nombre:'(baja)',legajo:'—'};
+    const acc = r.estado==='PENDIENTE' ? `<button class="btn mini ambar" onclick="event.stopPropagation();abrirRegularizar('${r.id}')">Regularizar</button>` : '';
+    const audit = r.audit ? `<div style="font-size:11px;color:var(--violeta)">Reg. por ${esc(r.audit.por)} el ${new Date(r.audit.fecha).toLocaleString('es-PY')} — ${esc(r.audit.motivo)}</div>` : '';
+    return `<div class="item"><div class="cuerpo">
+      <div class="l1">${esc(al.nombre)} <span class="chip ${r.estado.toLowerCase().replace('_','')}">${r.estado.replace('_',' ')}</span></div>
+      <div class="l2">Entrada ${fmtHoraTS(r.entrada)} · Salida ${fmtHoraTS(r.salida)} · <b>${fmtHs(r.minutos||0)}</b></div>${audit}
+    </div>${acc}</div>`;
+  }).join('') : `<div class="vacio">Sin registros de asistencia.</div>`;
+  abrirModal(`
+    <h3>${esc(a.nombre)} <span class="chip ${a.estado}">${a.estado.toUpperCase()}</span></h3>
+    <p class="sub">${a.tipo} · ${fmtFecha(a.fecha)} · ${a.hIni}–${a.hFin} · ${a.horas} hs acreditables${a.lugar?' · '+esc(a.lugar):''}${a.proyecto?'<br>Proyecto: '+esc(a.proyecto):''}</p>
+    ${a.estado==='abierta'?`
+      <div class="fila">
+        <button class="btn sec" onclick='cerrarModal();abrirModalActividad(${JSON.stringify(a).replace(/'/g,"&#39;")})'>✎ Editar</button>
+        <button class="btn peligro" onclick="iniciarCierre('${a.id}')">⏹ Cerrar actividad</button>
+      </div>`:`
+      <button class="btn sec" onclick="descargarBackup(false,'${a.id}')">⬇ Respaldo de esta actividad</button>`}
+    <hr class="sep"><h3 style="font-size:15px">Registros (${regs.length})</h3>${filas}
+    <button class="btn sec" style="margin-top:12px" onclick="cerrarModal()">Cerrar ventana</button>
+  `);
+}
+
+/* ---------- Cálculo de horas acreditadas ---------- */
+function calcularMinutos(reg, act){
+  if(!reg.entrada || !reg.salida) return 0;
+  const base = new Date(act.fecha+'T00:00:00').getTime();
+  const [hi,mi]=act.hIni.split(':').map(Number), [hf,mf]=act.hFin.split(':').map(Number);
+  const tIni = base + (hi*60+mi)*60000, tFin = base + (hf*60+mf)*60000;
+  let ent = reg.entrada;
+  if(ent <= tIni + DB.config.toleranciaMin*60000) ent = tIni;   // tolerancia: llegó "a tiempo"
+  ent = Math.max(ent, tIni);
+  const sal = Math.min(reg.salida, tFin);
+  let min = Math.max(0, Math.round((sal-ent)/60000));
+  const bloque = DB.config.redondeoMin||1;
+  if(bloque>1) min = Math.round(min/bloque)*bloque;             // redondeo al bloque más cercano
+  return Math.min(min, Math.round(act.horas*60));               // tope: horas declaradas
+}
+function horasAcumuladas(alumnoId){
+  return DB.registros.filter(r=>r.alumnoId===alumnoId && (r.estado==='COMPLETO'||r.estado==='REGULARIZADO'))
+    .reduce((s,r)=>s+(r.minutos||0),0);
+}
+
+/* ---------- Vista Registro: selección de actividad ---------- */
+let actActivaId=null, modoRegistro='entrada';
+function renderRegistro(){
+  const abiertas=DB.actividades.filter(a=>a.estado==='abierta').sort((a,b)=>(b.fecha+b.hIni).localeCompare(a.fecha+a.hIni));
+  selActividad.innerHTML = abiertas.length
+    ? abiertas.map(a=>`<option value="${a.id}">${esc(a.nombre)} — ${fmtFecha(a.fecha)}</option>`).join('')
+    : `<option value="">(No hay actividades abiertas)</option>`;
+  if(!abiertas.some(a=>a.id===actActivaId)) actActivaId = abiertas[0]?.id || null;
+  if(actActivaId) selActividad.value=actActivaId;
+  cambiarActividadActiva();
+}
+function cambiarActividadActiva(){
+  actActivaId = selActividad.value||null;
+  const a=DB.actividades.find(x=>x.id===actActivaId);
+  panelEscaneo.style.display = a?'block':'none';
+  tarjetaPresentes.style.display = a?'block':'none';
+  infoActividadSel.innerHTML = a ? `${a.tipo} · ${a.hIni}–${a.hFin} · máx. <b>${a.horas} hs</b> acreditables${a.lugar?' · '+esc(a.lugar):''}` : 'Creá una actividad en la pestaña Actividades para comenzar.';
+  renderPresentes();
+}
+function setModoRegistro(m){
+  modoRegistro=m;
+  btnModoEnt.classList.toggle('act', m==='entrada');
+  btnModoSal.classList.toggle('act', m==='salida');
+}
+function renderPresentes(){
+  if(!actActivaId){ listaPresentes.innerHTML=''; return; }
+  const enCurso=DB.registros.filter(r=>r.actId===actActivaId && r.estado==='EN_CURSO');
+  cntPresentes.textContent = enCurso.length + ' en curso';
+  listaPresentes.innerHTML = enCurso.length ? enCurso.map(r=>{
+    const al=DB.alumnos.find(x=>x.id===r.alumnoId)||{nombre:'?',legajo:'?'};
+    return `<div class="item"><div class="cuerpo"><div class="l1">${esc(al.nombre)}</div><div class="l2">Entrada ${fmtHoraTS(r.entrada)}</div></div></div>`;
+  }).join('') : `<div class="vacio">Nadie registró entrada todavía.</div>`;
+}
+
+/* ---------- Procesamiento de un escaneo ---------- */
+function procesarLegajo(legajo, contexto){
+  legajo=String(legajo).trim(); if(!legajo) return;
+  const modo = contexto==='barrido' ? 'salida' : modoRegistro;
+  const actId = contexto==='barrido' ? actCierreId : actActivaId;
+  const act=DB.actividades.find(a=>a.id===actId);
+  if(!act){ mostrarResultado('err','No hay actividad seleccionada.',contexto); return; }
+  const al=DB.alumnos.find(a=>a.legajo===legajo);
+  if(!al){ mostrarResultado('err',`Legajo ${legajo} no está en el padrón.`,contexto); return; }
+  const reg=DB.registros.find(r=>r.actId===actId && r.alumnoId===al.id);
+  const ahora=Date.now();
+  if(modo==='entrada'){
+    if(reg){ mostrarResultado('info',`${al.nombre}: ya tiene entrada (${fmtHoraTS(reg.entrada)}).`,contexto,al.foto); return; }
+    DB.registros.push({id:uid(), actId, alumnoId:al.id, entrada:ahora, salida:null, estado:'EN_CURSO', minutos:0, audit:null});
+    guardar(); mostrarResultado('ok',`▶ ENTRADA · ${al.nombre} · ${fmtHoraTS(ahora)}`,contexto,al.foto);
+  } else {
+    if(!reg){ mostrarResultado('err',`${al.nombre}: no tiene entrada registrada.`,contexto,al.foto); return; }
+    if(reg.salida){ mostrarResultado('info',`${al.nombre}: la salida ya fue registrada (${fmtHoraTS(reg.salida)}).`,contexto,al.foto); return; }
+    reg.salida=ahora; reg.estado='COMPLETO'; reg.minutos=calcularMinutos(reg,act);
+    guardar(); mostrarResultado('ok',`◀ SALIDA · ${al.nombre} · ${fmtHs(reg.minutos)} acreditadas`,contexto,al.foto);
+  }
+  renderPresentes();
+  if(contexto==='barrido') renderListaBarrido();
+}
+function mostrarResultado(tipo,msj,contexto,foto){
+  const el = contexto==='barrido' ? document.getElementById('resBarrido') : resScan;
+  if(!el) return;
+  el.className='resultado-scan '+tipo; el.style.display='block';
+  if(foto){
+    el.innerHTML=`<div style="display:flex;align-items:center;gap:10px;text-align:left"><img class="scan-foto" src="${foto}"><span>${esc(msj)}</span></div>`;
+  } else el.textContent=msj;
+  if(navigator.vibrate) navigator.vibrate(tipo==='ok'?60:[60,60,60]);
+  if(typeof beepScan==='function') beepScan(tipo);
+  clearTimeout(el._t); el._t=setTimeout(()=>{el.style.display='none';},3500);
+}
+
+/* ---------- Cámara (BarcodeDetector) ---------- */
+let streamCam=null, loopScan=null, ultimoScan={val:'',ts:0};
+async function toggleCamara(){ streamCam ? detenerCamara() : iniciarCamara(videoScan, btnCamara, 'registro'); }
+async function iniciarCamara(video, boton, contexto){
+  if(!('BarcodeDetector' in window)){ mostrarResultado('err','Este navegador no soporta detección de códigos. Usá el lector USB o el ingreso manual.',contexto); return; }
+  try{
+    streamCam = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+    video.srcObject=streamCam; video.style.display='block'; await video.play();
+    boton.textContent='⏹ Detener cámara';
+    const det=new BarcodeDetector({formats:['code_128','qr_code']});
+    loopScan=setInterval(async ()=>{
+      try{
+        const codes=await det.detect(video);
+        if(codes.length){
+          let v=codes[0].rawValue;
+          if(v.startsWith('ASISTQR|')) v=v.split('|')[1]||v;   // compatibilidad con carnets QR anteriores
+          const ahora=Date.now();
+          if(v===ultimoScan.val && ahora-ultimoScan.ts<4000) return; // anti-doble lectura
+          ultimoScan={val:v,ts:ahora};
+          procesarLegajo(v, contexto);
+        }
+      }catch(e){}
+    }, 400);
+  }catch(e){ mostrarResultado('err','No se pudo acceder a la cámara: '+e.message,contexto); }
+}
+function detenerCamara(){
+  if(loopScan){clearInterval(loopScan);loopScan=null;}
+  if(streamCam){streamCam.getTracks().forEach(t=>t.stop());streamCam=null;}
+  videoScan.style.display='none'; videoScan.srcObject=null;
+  btnCamara.textContent='📷 Activar cámara';
+}
+
+/* ---------- Cierre de actividad con barrido de salida ---------- */
+let actCierreId=null;
+function iniciarCierre(id){
+  actCierreId=id;
+  const a=DB.actividades.find(x=>x.id===id);
+  abrirModal(`
+    <h3>⏹ Cierre — ${esc(a.nombre)}</h3>
+    <p class="sub"><b>Barrido de salida:</b> antes de finalizar, pasá los carnets de los alumnos <u>presentes</u> que se retiran ahora. Quien ya se retiró sin registrar salida quedará <b>PENDIENTE con 0 horas</b>, regularizable solo con justificación.</p>
+    <video id="videoBarrido" playsinline muted style="display:none;width:100%;border-radius:8px;background:#000;max-height:280px;object-fit:cover"></video>
+    <button class="btn ambar" id="btnCamBarrido" onclick="toggleCamaraBarrido()">📷 Activar cámara para barrido</button>
+    <label>Ingreso manual (legajo + Enter)</label>
+    <input id="inputBarrido" autocomplete="off" placeholder="Escribir legajo…">
+    <div style="font-size:12px;color:var(--gris);margin-top:6px">🔌 Con lector USB: escaneá directamente, sin tocar la pantalla.</div>
+    <div id="resBarrido" class="resultado-scan" style="display:none"></div>
+    <div id="listaBarrido" style="margin-top:10px"></div>
+    <hr class="sep">
+    <button class="btn peligro" onclick="confirmarCierre()">Finalizar cierre de la actividad</button>
+    <button class="btn sec" style="margin-top:8px" onclick="cerrarModal();verActividad('${id}')">Cancelar</button>
+  `);
+  const inp=document.getElementById('inputBarrido');
+  inp.addEventListener('keydown', e=>{ if(e.key==='Enter'){ procesarLegajo(inp.value,'barrido'); inp.value=''; }});
+  renderListaBarrido();
+}
+function renderListaBarrido(){
+  const cont=document.getElementById('listaBarrido'); if(!cont) return;
+  const sinSalida=DB.registros.filter(r=>r.actId===actCierreId && r.estado==='EN_CURSO');
+  cont.innerHTML = sinSalida.length
+    ? `<div class="aviso">⚠ ${sinSalida.length} alumno(s) aún sin salida:</div>` + sinSalida.map(r=>{
+        const al=DB.alumnos.find(x=>x.id===r.alumnoId)||{nombre:'?'};
+        return `<div class="item"><div class="cuerpo"><div class="l1">${esc(al.nombre)}</div><div class="l2">Entrada ${fmtHoraTS(r.entrada)}</div></div></div>`;
+      }).join('')
+    : `<div class="resultado-scan ok" style="display:block">✔ Todos los registros tienen salida.</div>`;
+}
+let streamBarrido=null, loopBarrido=null;
+async function toggleCamaraBarrido(){
+  const video=document.getElementById('videoBarrido'), boton=document.getElementById('btnCamBarrido');
+  if(streamBarrido){ detenerCamaraBarrido(); return; }
+  if(!('BarcodeDetector' in window)){ mostrarResultado('err','Sin soporte de cámara para códigos; usá lector USB o manual.','barrido'); return; }
+  try{
+    streamBarrido=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+    video.srcObject=streamBarrido; video.style.display='block'; await video.play();
+    boton.textContent='⏹ Detener cámara';
+    const det=new BarcodeDetector({formats:['code_128','qr_code']});
+    loopBarrido=setInterval(async ()=>{
+      try{
+        const codes=await det.detect(video);
+        if(codes.length){
+          let v=codes[0].rawValue; if(v.startsWith('ASISTQR|')) v=v.split('|')[1]||v;
+          const ahora=Date.now();
+          if(v===ultimoScan.val && ahora-ultimoScan.ts<4000) return;
+          ultimoScan={val:v,ts:ahora}; procesarLegajo(v,'barrido');
+        }
+      }catch(e){}
+    },400);
+  }catch(e){ mostrarResultado('err','No se pudo acceder a la cámara: '+e.message,'barrido'); }
+}
+function detenerCamaraBarrido(){
+  if(loopBarrido){clearInterval(loopBarrido);loopBarrido=null;}
+  if(streamBarrido){streamBarrido.getTracks().forEach(t=>t.stop());streamBarrido=null;}
+  const v=document.getElementById('videoBarrido'); if(v){v.style.display='none';v.srcObject=null;}
+  const b=document.getElementById('btnCamBarrido'); if(b) b.textContent='📷 Activar cámara para barrido';
+}
+function confirmarCierre(){
+  const sinSalida=DB.registros.filter(r=>r.actId===actCierreId && r.estado==='EN_CURSO');
+  if(sinSalida.length && !confirm(`${sinSalida.length} alumno(s) quedarán PENDIENTES con 0 horas. ¿Confirmás el cierre?`)) return;
+  const a=DB.actividades.find(x=>x.id===actCierreId);
+  sinSalida.forEach(r=>{ r.estado='PENDIENTE'; r.minutos=0; });
+  a.estado='cerrada'; a.cerradaEn=Date.now();
+  guardar(); detenerCamaraBarrido(); cerrarModal();
+  descargarBackup(true, a.id);          // respaldo automático al cierre
+  renderActividades(); renderRegistro();
+  setTimeout(()=>{ if(confirm('Actividad cerrada y respaldo descargado.\n¿Compartir el respaldo a Google Drive ahora?')) compartirBackup(a.id); }, 400);
+}
+
+/* ---------- Regularización de pendientes (auditada) ---------- */
+function abrirRegularizar(regId){
+  const r=DB.registros.find(x=>x.id===regId);
+  const al=DB.alumnos.find(x=>x.id===r.alumnoId)||{nombre:'?'};
+  const act=DB.actividades.find(x=>x.id===r.actId);
+  abrirModal(`
+    <h3>Regularizar registro pendiente</h3>
+    <p class="sub"><b>${esc(al.nombre)}</b> — ${esc(act.nombre)}<br>Entrada ${fmtHoraTS(r.entrada)} · sin salida registrada.</p>
+    <label>Horas a acreditar (máx. ${act.horas})</label>
+    <input id="mRegHoras" type="number" step="0.25" min="0" max="${act.horas}" value="0">
+    <label>Justificación (obligatoria)</label>
+    <textarea id="mRegMotivo" rows="3" placeholder="Ej.: El alumno permaneció hasta el final; se verificó presencia en el acto de cierre."></textarea>
+    <label>Regularizado por</label><input id="mRegPor" value="${esc(DB.config.resp)}">
+    <div class="fila" style="margin-top:16px">
+      <button class="btn sec" onclick="cerrarModal();verActividad('${act.id}')">Cancelar</button>
+      <button class="btn" onclick="guardarRegularizacion('${regId}')">Acreditar</button>
+    </div>
+  `);
+}
+function guardarRegularizacion(regId){
+  const r=DB.registros.find(x=>x.id===regId);
+  const act=DB.actividades.find(x=>x.id===r.actId);
+  const hs=parseFloat(mRegHoras.value), motivo=mRegMotivo.value.trim(), por=mRegPor.value.trim();
+  if(isNaN(hs)||hs<0||hs>act.horas){ alert('Horas fuera de rango.'); return; }
+  if(!motivo||!por){ alert('La justificación y el responsable son obligatorios.'); return; }
+  r.minutos=Math.round(hs*60); r.estado='REGULARIZADO';
+  r.audit={por, fecha:Date.now(), motivo};
+  guardar(); cerrarModal(); verActividad(act.id);
+}
+/* ================================================================
+   Informes, constancias, respaldo (descarga + compartir) e inicio
+================================================================ */
+function semaforo(min){
+  const pct = min/(DB.config.metaHoras*60)*100;
+  return pct>=100?'v':(pct>=50?'a':'r');
+}
+
+function renderInforme(){
+  const tipo=tipoInforme.value;
+  if(tipo==='actividad'){
+    filtrosInforme.innerHTML=`<label>Actividad</label><select id="fAct" onchange="renderInforme()">${
+      DB.actividades.slice().sort((a,b)=>(b.fecha).localeCompare(a.fecha)).map(a=>`<option value="${a.id}">${esc(a.nombre)} — ${fmtFecha(a.fecha)}</option>`).join('')||'<option value="">(sin actividades)</option>'}</select>`;
+    const prev=document.getElementById('fAct');
+    informeActividad(prev&&prev.value);
+  } else if(tipo==='alumno'){
+    filtrosInforme.innerHTML='';
+    informeAlumnos();
+  } else {
+    filtrosInforme.innerHTML=`<div class="fila">
+      <div><label>Desde</label><input id="fDesde" type="date" onchange="renderInforme()"></div>
+      <div><label>Hasta</label><input id="fHasta" type="date" onchange="renderInforme()"></div></div>
+      <label>Proyecto (opcional)</label><input id="fProy" placeholder="Filtrar por proyecto…" oninput="renderInforme()">`;
+    informePeriodo();
+  }
+}
+
+function informeActividad(actId){
+  const a=DB.actividades.find(x=>x.id===actId);
+  if(!a){ cuerpoInforme.innerHTML=`<div class="tarjeta"><div class="vacio">Sin actividades para informar.</div></div>`; return; }
+  const regs=DB.registros.filter(r=>r.actId===actId);
+  const totalMin=regs.reduce((s,r)=>s+(r.minutos||0),0);
+  // Enriquecer con datos del alumno y ordenar: carrera (alfabético) → nombre (alfabético)
+  const filasDatos = regs.map(r=>({r, al:DB.alumnos.find(x=>x.id===r.alumnoId)||{nombre:'(baja)',carrera:''}}))
+    .sort((x,y)=>{
+      const cx=x.al.carrera||'', cy=y.al.carrera||'';
+      if(!cx && cy) return 1;              // sin carrera → al final
+      if(cx && !cy) return -1;
+      return cx.localeCompare(cy,'es') || x.al.nombre.localeCompare(y.al.nombre,'es');
+    });
+  let cuerpoTabla='', carreraPrev=null;
+  filasDatos.forEach(({r,al})=>{
+    const car = al.carrera || 'Sin carrera asignada';
+    if(car!==carreraPrev){
+      const n=filasDatos.filter(f=>(f.al.carrera||'Sin carrera asignada')===car).length;
+      cuerpoTabla+=`<tr><td colspan="5" style="background:var(--ambar-cl);font-weight:800;color:var(--amarillo)">${esc(car)} (${n})</td></tr>`;
+      carreraPrev=car;
+    }
+    cuerpoTabla+=`<tr><td>${esc(al.nombre)}</td><td>${fmtHoraTS(r.entrada)}</td><td>${fmtHoraTS(r.salida)}</td><td><b>${fmtHs(r.minutos||0)}</b></td><td>${r.estado.replace('_',' ')}</td></tr>`;
+  });
+  cuerpoInforme.innerHTML=`<div class="tarjeta">
+    <h3>${esc(a.nombre)}</h3>
+    <div style="font-size:13px;color:var(--gris);margin-bottom:8px">${a.tipo} · ${fmtFecha(a.fecha)} · ${a.hIni}–${a.hFin}${a.lugar?' · '+esc(a.lugar):''}${a.responsable?' · Resp.: '+esc(a.responsable):''}</div>
+    <div class="kpis"><div class="kpi"><div class="num">${regs.length}</div><div class="lbl">Asistentes</div></div>
+    <div class="kpi"><div class="num">${fmtHs(totalMin)}</div><div class="lbl">Horas totales</div></div>
+    <div class="kpi"><div class="num">${regs.filter(r=>r.estado==='PENDIENTE').length}</div><div class="lbl">Pendientes</div></div></div>
+    <div class="tabla-scroll"><table class="rep"><tr><th>Alumno</th><th>Entrada</th><th>Salida</th><th>Horas</th><th>Estado</th></tr>
+    ${cuerpoTabla||'<tr><td colspan="5">Sin registros</td></tr>'}
+    </table></div></div>`;
+}
+
+function informeAlumnos(){
+  const meta=DB.config.metaHoras*60;
+  const lista=DB.alumnos.slice().sort((a,b)=>horasAcumuladas(b.id)-horasAcumuladas(a.id));
+  cuerpoInforme.innerHTML=`<div class="tarjeta"><h3>Avance hacia la meta de ${DB.config.metaHoras} horas</h3>${
+    lista.length? lista.map(a=>{
+      const min=horasAcumuladas(a.id), pct=Math.min(100, Math.round(min/meta*100));
+      return `<div class="item" onclick="verConstancia('${a.id}')"><div class="cuerpo">
+        <div class="l1"><span class="sem ${semaforo(min)}"></span>${esc(a.nombre)}</div>
+        <div class="l2">${fmtHs(min)} de ${DB.config.metaHoras} h (${pct}%)${a.carrera?' · '+esc(a.carrera):''}</div>
+        <div class="barra"><div style="width:${pct}%"></div></div>
+      </div><button class="btn mini sec" onclick="event.stopPropagation();verConstancia('${a.id}')">Constancia</button></div>`;
+    }).join('') : '<div class="vacio">Padrón vacío.</div>'}</div>`;
+}
+
+function informePeriodo(){
+  const d=document.getElementById('fDesde')?.value||'', h=document.getElementById('fHasta')?.value||'';
+  const proy=(document.getElementById('fProy')?.value||'').toLowerCase();
+  const acts=DB.actividades.filter(a=> (!d||a.fecha>=d) && (!h||a.fecha<=h) && (!proy||(a.proyecto||'').toLowerCase().includes(proy)));
+  const ids=new Set(acts.map(a=>a.id));
+  const regs=DB.registros.filter(r=>ids.has(r.actId));
+  const alumnosU=new Set(regs.map(r=>r.alumnoId));
+  const totalMin=regs.reduce((s,r)=>s+(r.minutos||0),0);
+  cuerpoInforme.innerHTML=`<div class="tarjeta">
+    <h3>Resumen del período${d||h?` (${d?fmtFecha(d):'…'} — ${h?fmtFecha(h):'…'})`:''}</h3>
+    <div class="kpis"><div class="kpi"><div class="num">${acts.length}</div><div class="lbl">Actividades</div></div>
+    <div class="kpi"><div class="num">${alumnosU.size}</div><div class="lbl">Alumnos</div></div>
+    <div class="kpi"><div class="num">${fmtHs(totalMin)}</div><div class="lbl">Horas totales</div></div></div>
+    <div class="tabla-scroll"><table class="rep"><tr><th>Actividad</th><th>Fecha</th><th>Proyecto</th><th>Asist.</th><th>Horas</th></tr>
+    ${acts.sort((a,b)=>a.fecha.localeCompare(b.fecha)).map(a=>{
+      const rs=regs.filter(r=>r.actId===a.id);
+      return `<tr><td>${esc(a.nombre)}</td><td>${fmtFecha(a.fecha)}</td><td>${esc(a.proyecto)||'—'}</td><td>${rs.length}</td><td><b>${fmtHs(rs.reduce((s,r)=>s+(r.minutos||0),0))}</b></td></tr>`;
+    }).join('')||'<tr><td colspan="5">Sin actividades en el período</td></tr>'}
+    </table></div></div>`;
+}
+
+/* ---------- Constancia individual ---------- */
+function verConstancia(alumnoId){
+  const al=DB.alumnos.find(x=>x.id===alumnoId); if(!al) return;
+  const c=DB.config;
+  const regs=DB.registros.filter(r=>r.alumnoId===alumnoId && (r.estado==='COMPLETO'||r.estado==='REGULARIZADO'))
+    .map(r=>({r, a:DB.actividades.find(x=>x.id===r.actId)})).filter(x=>x.a)
+    .sort((x,y)=>x.a.fecha.localeCompare(y.a.fecha));
+  const total=regs.reduce((s,x)=>s+(x.r.minutos||0),0);
+  const pct=Math.min(100, Math.round(total/(c.metaHoras*60)*100));
+  cuerpoConstancia.innerHTML=`<div class="constancia">
+    <div class="enc">${c.logo?`<img src="${c.logo}">`:''}<div class="t"><b>${esc(c.uni)}</b><br>${esc(c.fac)}<br>${esc(c.filial)}</div></div>
+    <h2>Constancia de horas de extensión universitaria</h2>
+    <p style="font-size:13.5px;text-align:justify">Se deja constancia de que <b>${esc(al.nombre)}</b>, legajo N.º <b>${esc(al.legajo)}</b>${al.carrera?`, de la carrera de <b>${esc(al.carrera)}</b>`:''}, ha participado de las actividades de extensión universitaria que se detallan a continuación, acreditando un total de <b>${fmtHs(total)}</b> sobre la meta institucional de ${c.metaHoras} horas (${pct}%).</p>
+    <table class="rep"><tr><th>Fecha</th><th>Actividad</th><th>Tipo</th><th>Proyecto</th><th>Horas</th></tr>
+    ${regs.map(x=>`<tr><td>${fmtFecha(x.a.fecha)}</td><td>${esc(x.a.nombre)}${x.r.estado==='REGULARIZADO'?' *':''}</td><td>${esc(x.a.tipo)}</td><td>${esc(x.a.proyecto)||'—'}</td><td><b>${fmtHs(x.r.minutos)}</b></td></tr>`).join('')||'<tr><td colspan="5">Sin actividades acreditadas</td></tr>'}
+    <tr><td colspan="4" style="text-align:right"><b>TOTAL ACREDITADO</b></td><td><b>${fmtHs(total)}</b></td></tr></table>
+    ${regs.some(x=>x.r.estado==='REGULARIZADO')?'<p style="font-size:11px;color:var(--gris);margin-top:6px">* Registro regularizado por el responsable con justificación documentada.</p>':''}
+    <p style="font-size:12px;margin-top:14px">Expedida en ${esc(c.filial.replace('Filial ',''))}, a los ${new Date().getDate()} días del mes de ${new Date().toLocaleDateString('es-PY',{month:'long'})} de ${new Date().getFullYear()}.</p>
+    <div class="firmas"><div>${esc(c.resp)||'Responsable de Extensión'}<br>Firma y sello</div><div>Decanato / Coordinación<br>Firma y sello</div></div>
+  </div>`;
+  irVista('v-constancia'); marcarParaImpresion('v-constancia');
+}
+
+/* ---------- Respaldo: descarga y compartir ---------- */
+function armarBackup(soloActId){
+  const data = soloActId ? {
+    tipo:'actividad', config:DB.config, generado:new Date().toISOString(),
+    actividad:DB.actividades.find(a=>a.id===soloActId),
+    alumnos:DB.alumnos, registros:DB.registros.filter(r=>r.actId===soloActId)
+  } : Object.assign({tipo:'completo', generado:new Date().toISOString()}, DB);
+  const stamp=new Date().toISOString().slice(0,16).replace('T','_').replace(':','');
+  const nombre=`asistext_${soloActId?'cierre':'backup'}_${stamp}.json`;
+  return {blob:new Blob([JSON.stringify(data,null,1)],{type:'application/json'}), nombre};
+}
+function descargarBackup(silencioso, soloActId){
+  const {blob,nombre}=armarBackup(soloActId);
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=nombre;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  if(!silencioso) alert(`Respaldo descargado: ${nombre}\nRevisá tu carpeta Descargas.`);
+}
+async function compartirBackup(soloActId){
+  const {blob,nombre}=armarBackup(soloActId);
+  const archivo=new File([blob], nombre, {type:'application/json'});
+  if(navigator.canShare && navigator.canShare({files:[archivo]})){
+    try{ await navigator.share({files:[archivo], title:'Respaldo AsistEXT'}); }
+    catch(e){ /* usuario canceló */ }
+  } else {
+    alert('Este navegador no permite compartir archivos. Se descargará el respaldo; subilo a Drive desde tu carpeta Descargas.');
+    descargarBackup(true, soloActId);
+  }
+}
+function restaurarBackup(inp){
+  const f=inp.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const d=JSON.parse(r.result);
+      if(d.tipo==='actividad'){
+        if(!confirm(`El archivo contiene el cierre de "${d.actividad?.nombre}". ¿Fusionar con los datos actuales?`)) return;
+        d.alumnos.forEach(a=>{ if(!DB.alumnos.some(x=>x.legajo===a.legajo)) DB.alumnos.push(a); });
+        if(d.actividad && !DB.actividades.some(x=>x.id===d.actividad.id)) DB.actividades.push(d.actividad);
+        d.registros.forEach(rg=>{ if(!DB.registros.some(x=>x.id===rg.id)) DB.registros.push(rg); });
+      } else {
+        if(!Array.isArray(d.alumnos)||!Array.isArray(d.actividades)) throw new Error('Formato no reconocido');
+        if(!confirm('El respaldo completo REEMPLAZARÁ todos los datos actuales. ¿Continuar?')) return;
+        DB={config:d.config||DB.config, alumnos:d.alumnos, actividades:d.actividades, registros:d.registros||[]};
+      }
+      guardar(); aplicarIdentidad(); alert('Datos restaurados correctamente.'); irVista('v-registro');
+    }catch(e){ alert('El archivo no es un respaldo válido: '+e.message); }
+    inp.value='';
+  };
+  r.readAsText(f);
+}
+
+/* ---------- Lector USB: captura global por ráfaga de teclas ----------
+   Un lector USB (OTG en el móvil o directo en laptop) actúa como teclado:
+   escribe el legajo en ráfaga (<60 ms por tecla) y termina con Enter.
+   Esta captura funciona SIN foco en ningún campo: escaneás directamente. */
+let bufScanUSB=[];
+function registrarTecla(key, ts){
+  const el=document.activeElement;
+  const enCampo = el && ['INPUT','TEXTAREA','SELECT'].includes(el.tagName);
+  if(enCampo){ bufScanUSB=[]; return; }   // si hay un campo con foco, manda ese campo
+  if(key==='Enter'){
+    if(bufScanUSB.length>=3){
+      const dur = ts - bufScanUSB[0].ts;
+      if(dur < bufScanUSB.length*60){      // firma de escáner: ráfaga veloz
+        let val = bufScanUSB.map(b=>b.k).join('');
+        if(val.startsWith('ASISTQR|')) val=val.split('|')[1]||val;
+        const contexto = (veloModal.classList.contains('act') && document.getElementById('inputBarrido')) ? 'barrido'
+                       : (document.getElementById('v-registro').classList.contains('act') ? 'registro' : null);
+        if(contexto) procesarLegajo(val, contexto);
+      }
+    }
+    bufScanUSB=[]; return;
+  }
+  if(key && key.length===1){
+    if(bufScanUSB.length && ts - bufScanUSB[bufScanUSB.length-1].ts > 300) bufScanUSB=[];
+    bufScanUSB.push({k:key, ts});
+  }
+}
+document.addEventListener('keydown', e=>registrarTecla(e.key, Date.now()));
+
+/* ---------- Beep de confirmación (operación sin mirar la pantalla) ---------- */
+function beepScan(tipo){
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+    beepScan.ctx = beepScan.ctx || new AC();
+    const ctx=beepScan.ctx, o=ctx.createOscillator(), g=ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.frequency.value = tipo==='ok' ? 1050 : (tipo==='info' ? 650 : 260);
+    g.gain.setValueAtTime(0.15, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.18);
+    o.start(); o.stop(ctx.currentTime+0.2);
+  }catch(e){}
+}
+
+/* ---------- Inicio ---------- */
+document.addEventListener('DOMContentLoaded', ()=>{
+  cargarDB(); aplicarIdentidad();
+  inputManual.addEventListener('keydown', e=>{
+    if(e.key==='Enter'){ procesarLegajo(inputManual.value,'registro'); inputManual.value=''; }
+  });
+  renderRegistro();
+});
+window.addEventListener('afterprint', ()=>{ document.querySelectorAll('.vista').forEach(v=>v.classList.remove('print-obj')); });
+</script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));}</script>
+</body></html>
