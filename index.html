@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>AsistEXT — Extensión Universitaria UPE</title>
+<title>AsistClase — Control de asistencia a clases UPE</title>
 <meta name="theme-color" content="#1B3A6B">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
@@ -14,77 +14,76 @@
   --azul:#1B3A6B; --azul-osc:#122A50; --ambar:#D98E04; --ambar-cl:#FDF3DC;
   --papel:#F5F6F8; --tarjeta:#FFFFFF; --tinta:#1A2433; --gris:#5B6676; --linea:#DDE2EA;
   --verde:#1E7D46; --verde-cl:#E2F3E8; --rojo:#B3261E; --rojo-cl:#FBEAE9;
-  --amarillo:#9A6B00; --amarillo-cl:#FFF4D6; --violeta:#5B3E96; --violeta-cl:#EEE8FA;
-  --radio:10px;
+  --amarillo:#9A6B00; --amarillo-cl:#FFF4D6; --violeta:#5B3E96; --violeta-cl:#EEE8FA; --radio:10px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--papel);color:var(--tinta);font-size:15px;line-height:1.45;padding-bottom:76px}
-h1,h2,h3{line-height:1.2}
 button{font-family:inherit;cursor:pointer;border:none}
 input,select,textarea{font-family:inherit;font-size:15px;width:100%;padding:10px 12px;border:1.5px solid var(--linea);border-radius:8px;background:#fff;color:var(--tinta)}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--azul)}
 label{display:block;font-size:12.5px;font-weight:600;color:var(--gris);margin:12px 0 4px;text-transform:uppercase;letter-spacing:.04em}
 
-/* Cabecera institucional */
-.cabecera{background:linear-gradient(160deg,var(--azul) 0%,var(--azul-osc) 100%);color:#fff;padding:14px 16px 12px;display:flex;align-items:center;gap:12px}
+.cabecera{background:linear-gradient(160deg,var(--azul),var(--azul-osc));color:#fff;padding:14px 16px 12px;display:flex;align-items:center;gap:12px}
 .cabecera img.logo{width:46px;height:46px;object-fit:contain;background:#fff;border-radius:8px;padding:3px}
-.cabecera .logo-ph{width:46px;height:46px;border-radius:8px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;letter-spacing:.02em;border:1.5px dashed rgba(255,255,255,.5)}
+.cabecera .logo-ph{width:46px;height:46px;border-radius:8px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-weight:800;border:1.5px dashed rgba(255,255,255,.5)}
 .cabecera .tit{flex:1;min-width:0}
-.cabecera .tit .app{font-size:19px;font-weight:800;letter-spacing:.01em}
+.cabecera .tit .app{font-size:19px;font-weight:800}
 .cabecera .tit .app span{color:var(--ambar)}
 .cabecera .tit .inst{font-size:11px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* Navegación inferior */
 nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--linea);display:flex;z-index:50;padding-bottom:env(safe-area-inset-bottom)}
 nav button{flex:1;background:none;padding:9px 2px 8px;font-size:10.5px;font-weight:600;color:var(--gris);display:flex;flex-direction:column;align-items:center;gap:3px}
 nav button .ic{font-size:20px;line-height:1}
 nav button.act{color:var(--azul)}
-nav button.act .ic{transform:scale(1.1)}
 
-/* Vistas y tarjetas */
-.vista{display:none;padding:14px 14px 20px;max-width:760px;margin:0 auto}
+.vista{display:none;padding:14px;max-width:820px;margin:0 auto}
 .vista.act{display:block}
 .tarjeta{background:var(--tarjeta);border:1px solid var(--linea);border-radius:var(--radio);padding:14px;margin-bottom:12px}
 .tarjeta h3{font-size:16px;margin-bottom:8px}
-.fila{display:flex;gap:10px;align-items:center}
+.fila{display:flex;gap:10px}
 .fila>*{flex:1}
 .sep{border:none;border-top:1px solid var(--linea);margin:14px 0}
 
-/* Botones */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--azul);color:#fff;font-weight:700;font-size:14.5px;padding:11px 16px;border-radius:9px;width:100%;transition:opacity .15s}
 .btn:active{opacity:.8}
 .btn.sec{background:#fff;color:var(--azul);border:1.5px solid var(--azul)}
-.btn.peligro{background:var(--rojo)}
-.btn.exito{background:var(--verde)}
 .btn.ambar{background:var(--ambar);color:#3A2A00}
+.btn.verde{background:var(--verde)}
+.btn.peligro{background:var(--rojo)}
 .btn.mini{width:auto;padding:7px 12px;font-size:13px;border-radius:7px}
-.btn:disabled{opacity:.45;cursor:default}
+.btn:disabled{opacity:.45}
 
-/* Chips de estado */
 .chip{display:inline-block;font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px;letter-spacing:.03em}
 .chip.abierta{background:var(--verde-cl);color:var(--verde)}
 .chip.cerrada{background:#E8EBF1;color:var(--gris)}
 .chip.encurso{background:var(--ambar-cl);color:var(--amarillo)}
-.chip.completo{background:var(--verde-cl);color:var(--verde)}
-.chip.pendiente{background:var(--rojo-cl);color:var(--rojo)}
-.chip.regularizado{background:var(--violeta-cl);color:var(--violeta)}
+.chip.presente{background:var(--verde-cl);color:var(--verde)}
+.chip.tarde{background:var(--amarillo-cl);color:var(--amarillo)}
+.chip.ausente{background:var(--rojo-cl);color:var(--rojo)}
+.chip.retirado{background:var(--violeta-cl);color:var(--violeta)}
+.chip.justificada{background:#E4ECF7;color:#2A5B9E}
 
-/* Semáforo de avance */
 .sem{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
 .sem.v{background:var(--verde)}.sem.a{background:#E0A800}.sem.r{background:var(--rojo)}
 .barra{height:8px;background:#E8EBF1;border-radius:6px;overflow:hidden;margin-top:5px}
 .barra>div{height:100%;border-radius:6px;background:var(--azul);transition:width .3s}
 
-/* Listas */
 .item{display:flex;align-items:center;gap:10px;padding:11px 4px;border-bottom:1px solid var(--linea)}
 .item:last-child{border-bottom:none}
 .item .cuerpo{flex:1;min-width:0}
-.item .cuerpo .l1{font-weight:700;font-size:14.5px}
-.item .cuerpo .l2{font-size:12.5px;color:var(--gris)}
+.item .l1{font-weight:700;font-size:14.5px}
+.item .l2{font-size:12.5px;color:var(--gris)}
+.avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.avatar-ph{width:40px;height:40px;border-radius:50%;background:#E4E8F0;color:var(--gris);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0}
 .vacio{text-align:center;color:var(--gris);padding:26px 10px;font-size:14px}
 .vacio b{display:block;color:var(--tinta);margin-bottom:4px}
+.aviso{background:var(--ambar-cl);border:1px solid #E8D5A0;border-radius:9px;padding:10px 12px;font-size:13px;color:#6B4E00;margin-bottom:12px}
 
-/* Panel de escaneo */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.kpi{background:var(--tarjeta);border:1px solid var(--linea);border-radius:var(--radio);padding:10px;text-align:center}
+.kpi .num{font-size:20px;font-weight:800;color:var(--azul)}
+.kpi .lbl{font-size:10.5px;color:var(--gris);text-transform:uppercase;letter-spacing:.04em;font-weight:700}
+
 .panel-escaneo{background:var(--azul-osc);border-radius:var(--radio);padding:14px;color:#fff;margin-bottom:12px}
 .panel-escaneo video{width:100%;border-radius:8px;background:#000;max-height:300px;object-fit:cover}
 .modo-toggle{display:flex;background:rgba(255,255,255,.12);border-radius:9px;padding:3px;margin-bottom:10px}
@@ -94,48 +93,23 @@ nav button.act .ic{transform:scale(1.1)}
 .resultado-scan.ok{background:var(--verde);color:#fff}
 .resultado-scan.err{background:var(--rojo);color:#fff}
 .resultado-scan.info{background:var(--ambar);color:#3A2A00}
+.scan-foto{width:52px;height:52px;border-radius:8px;object-fit:cover;border:2px solid rgba(255,255,255,.7);flex-shrink:0}
 
-/* Modal */
 .velo{display:none;position:fixed;inset:0;background:rgba(12,20,35,.55);z-index:100;align-items:flex-end;justify-content:center}
 .velo.act{display:flex}
-.modal{background:#fff;width:100%;max-width:560px;max-height:88vh;overflow-y:auto;border-radius:16px 16px 0 0;padding:18px 16px 24px}
+.modal{background:#fff;width:100%;max-width:600px;max-height:88vh;overflow-y:auto;border-radius:16px 16px 0 0;padding:18px 16px 24px}
 .modal h3{font-size:17px;margin-bottom:4px}
 .modal .sub{font-size:13px;color:var(--gris);margin-bottom:10px}
+.prev-carnet{width:100%;max-width:420px;display:block;margin:10px auto;border:1px solid var(--linea);border-radius:8px}
 
-/* Tablas de informe */
 table.rep{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
 table.rep th{background:var(--azul);color:#fff;padding:7px 8px;text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.03em}
 table.rep td{padding:7px 8px;border-bottom:1px solid var(--linea);vertical-align:top}
 table.rep tr:nth-child(even) td{background:#FAFBFD}
+table.rep td.c{text-align:center}
 .tabla-scroll{overflow-x:auto;margin:0 -14px;padding:0 14px}
 
-/* Carnets */
 .grid-carnets{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
-.carnet{background:#fff;border:1.5px solid var(--azul);border-radius:12px;overflow:hidden;page-break-inside:avoid}
-.carnet .franja{background:var(--azul);color:#fff;padding:8px 12px;display:flex;align-items:center;gap:8px}
-.carnet .franja img{width:30px;height:30px;object-fit:contain;background:#fff;border-radius:5px;padding:2px}
-.carnet .franja .t{font-size:10px;line-height:1.25}
-.carnet .franja .t b{display:block;font-size:11px}
-.carnet .datos{padding:10px 12px 4px;display:flex;gap:10px;align-items:center}
-.carnet .datos .foto{width:58px;height:70px;object-fit:cover;border-radius:6px;border:1.5px solid var(--linea);flex-shrink:0}
-.carnet .datos .foto-ph{width:58px;height:70px;border-radius:6px;border:1.5px dashed var(--linea);background:#F0F2F6;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--gris);flex-shrink:0}
-.carnet .datos .nom{font-weight:800;font-size:16px}
-.carnet .datos .car{font-size:12px;color:var(--gris)}
-.avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;flex-shrink:0}
-.avatar-ph{width:40px;height:40px;border-radius:50%;background:#E4E8F0;color:var(--gris);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0}
-.scan-foto{width:52px;height:52px;border-radius:8px;object-fit:cover;border:2px solid rgba(255,255,255,.7);flex-shrink:0}
-.carnet svg{display:block;margin:0 auto}
-.carnet .pie{background:var(--ambar-cl);color:var(--amarillo);font-size:9.5px;font-weight:700;text-align:center;padding:4px;letter-spacing:.05em}
-
-/* Constancia (impresión) */
-.constancia{background:#fff;border:1px solid var(--linea);border-radius:var(--radio);padding:26px 28px;max-width:760px;margin:0 auto}
-.constancia .enc{display:flex;align-items:center;gap:14px;border-bottom:2.5px solid var(--azul);padding-bottom:12px;margin-bottom:16px}
-.constancia .enc img{width:58px;height:58px;object-fit:contain}
-.constancia .enc .t{font-size:12px;line-height:1.4}
-.constancia .enc .t b{font-size:14px;color:var(--azul)}
-.constancia h2{text-align:center;font-size:17px;color:var(--azul);margin:10px 0 14px;text-transform:uppercase;letter-spacing:.06em}
-.constancia .firmas{display:flex;gap:40px;margin-top:54px}
-.constancia .firmas div{flex:1;border-top:1px solid var(--tinta);text-align:center;font-size:12px;padding-top:5px;color:var(--gris)}
 .solo-print{display:none}
 @media print{
   body{background:#fff;padding:0}
@@ -143,14 +117,9 @@ table.rep tr:nth-child(even) td{background:#FAFBFD}
   .vista{display:none!important;padding:0}
   .vista.print-obj{display:block!important;max-width:none}
   .tarjeta{border:none;padding:0}
-  .solo-print{display:block}
   .grid-carnets{grid-template-columns:repeat(2,1fr);gap:8mm}
+  @page{margin:10mm}
 }
-.aviso{background:var(--ambar-cl);border:1px solid #E8D5A0;border-radius:9px;padding:10px 12px;font-size:13px;color:#6B4E00;margin-bottom:12px}
-.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-.kpi{background:var(--tarjeta);border:1px solid var(--linea);border-radius:var(--radio);padding:10px;text-align:center}
-.kpi .num{font-size:21px;font-weight:800;color:var(--azul)}
-.kpi .lbl{font-size:10.5px;color:var(--gris);text-transform:uppercase;letter-spacing:.04em;font-weight:700}
 </style>
 </head>
 <body>
@@ -159,17 +128,21 @@ table.rep tr:nth-child(even) td{background:#FAFBFD}
   <img class="logo" id="logoCab" style="display:none" alt="Logo">
   <div class="logo-ph" id="logoPh">UPE</div>
   <div class="tit">
-    <div class="app">Asist<span>EXT</span></div>
-    <div class="inst" id="instCab">Facultad de Ciencias Administrativas y Contables — Filial Hernandarias</div>
+    <div class="app">Asist<span>Clase</span></div>
+    <div class="inst" id="instCab">Control de asistencia a clases</div>
   </div>
 </header>
 
-<!-- ============ VISTA REGISTRO ============ -->
-<section class="vista act" id="v-registro">
+<!-- ============ VISTA TOMAR ASISTENCIA ============ -->
+<section class="vista act" id="v-tomar">
   <div class="tarjeta">
-    <label>Actividad en curso</label>
-    <select id="selActividad" onchange="cambiarActividadActiva()"></select>
-    <div id="infoActividadSel" style="margin-top:8px;font-size:13px;color:var(--gris)"></div>
+    <label>Materia / curso</label>
+    <select id="selClase" onchange="cambiarClase()"></select>
+    <div class="fila" style="margin-top:8px">
+      <div><label>Sesión de clase</label><select id="selSesion" onchange="cambiarSesion()"></select></div>
+      <button class="btn mini" style="flex:none;align-self:flex-end" onclick="abrirModalSesion()">＋ Sesión</button>
+    </div>
+    <div id="infoSesion" style="margin-top:8px;font-size:13px;color:var(--gris)"></div>
   </div>
 
   <div class="panel-escaneo" id="panelEscaneo" style="display:none">
@@ -179,38 +152,48 @@ table.rep tr:nth-child(even) td{background:#FAFBFD}
     </div>
     <video id="videoScan" playsinline muted style="display:none"></video>
     <button class="btn ambar" id="btnCamara" onclick="toggleCamara()">📷 Activar cámara</button>
-    <label style="color:#C8D2E4;margin-top:12px">Ingreso manual (legajo + Enter)</label>
-    <input id="inputManual" inputmode="text" autocomplete="off" placeholder="Escribir legajo…">
-    <div style="font-size:12px;color:#9FB2D8;margin-top:6px">🔌 <b>Lector USB conectado (OTG o laptop):</b> escaneá directamente, sin tocar la pantalla. Un beep agudo confirma el registro.</div>
+    <label style="color:#C8D2E4;margin-top:12px">Ingreso manual (cédula/legajo + Enter)</label>
+    <input id="inputManual" inputmode="text" autocomplete="off" placeholder="Escribir cédula o legajo…">
+    <div style="font-size:12px;color:#9FB2D8;margin-top:6px">🔌 <b>Lector USB (OTG o laptop):</b> escaneá directamente, sin tocar la pantalla. Un beep agudo confirma.</div>
     <div id="resScan" class="resultado-scan" style="display:none"></div>
   </div>
 
   <div class="tarjeta" id="tarjetaPresentes" style="display:none">
-    <h3>En la actividad <span id="cntPresentes" class="chip encurso"></span></h3>
-    <div id="listaPresentes"></div>
+    <div class="kpis" id="kpisSesion"></div>
+    <div id="avisoSesionCerrada" class="aviso" style="display:none">Sesión cerrada. Podés tocar cualquier alumno para <b>cargar o ajustar su asistencia</b> y registrar <b>ausencias justificadas</b> con observación.</div>
+    <div class="fila" id="accionesSesion" style="margin-bottom:6px">
+      <button class="btn sec mini" onclick="marcarTodosPresente()">✔ Todos presentes</button>
+      <button class="btn peligro mini" onclick="cerrarSesionActual()">⏹ Cerrar sesión</button>
+    </div>
+    <div id="listaNomina"></div>
   </div>
 </section>
 
-<!-- ============ VISTA ACTIVIDADES ============ -->
-<section class="vista" id="v-actividades">
-  <button class="btn" onclick="abrirModalActividad()" style="margin-bottom:12px">＋ Nueva actividad</button>
-  <div class="tarjeta"><div id="listaActividades"></div></div>
+<!-- ============ VISTA CLASES ============ -->
+<section class="vista" id="v-clases">
+  <button class="btn" onclick="abrirModalClase()" style="margin-bottom:12px">＋ Nueva materia / curso</button>
+  <div class="tarjeta"><div id="listaClases"></div></div>
 </section>
 
 <!-- ============ VISTA ALUMNOS ============ -->
 <section class="vista" id="v-alumnos">
-  <div class="fila" style="margin-bottom:12px">
-    <button class="btn" onclick="abrirModalAlumno()">＋ Alumno</button>
-    <button class="btn sec" onclick="abrirModalImportar()">⇪ Importar lista</button>
+  <div class="tarjeta">
+    <label>Materia / curso</label>
+    <select id="selClaseAlum" onchange="renderAlumnos()"></select>
+    <div class="fila" style="margin-top:10px">
+      <button class="btn" onclick="abrirModalAlumno()">＋ Alumno</button>
+      <button class="btn sec" onclick="abrirModalImportar()">⇪ Importar nómina</button>
+    </div>
+    <button class="btn sec" style="margin-top:8px" onclick="abrirModalMoverNomina()">⇄ Mover nómina a otra materia</button>
   </div>
   <div class="tarjeta">
-    <input id="buscarAlumno" placeholder="Buscar por nombre o legajo…" oninput="renderAlumnos()">
+    <input id="buscarAlumno" placeholder="Buscar por nombre, cédula o legajo…" oninput="renderAlumnos()">
     <div id="listaAlumnos" style="margin-top:8px"></div>
   </div>
-  <button class="btn sec no-print" onclick="prepararCarnets()">🖨 Ver / imprimir carnets</button>
+  <button class="btn sec no-print" onclick="prepararCarnets()">🪪 Ver / imprimir carnets</button>
 </section>
 
-<!-- ============ VISTA CARNETS (impresión) ============ -->
+<!-- ============ VISTA CARNETS ============ -->
 <section class="vista" id="v-carnets">
   <div class="no-print" style="margin-bottom:12px">
     <button class="btn" onclick="window.print()">🖨 Imprimir carnets</button>
@@ -222,73 +205,77 @@ table.rep tr:nth-child(even) td{background:#FAFBFD}
 <!-- ============ VISTA INFORMES ============ -->
 <section class="vista" id="v-informes">
   <div class="tarjeta no-print">
+    <label>Materia / curso</label>
+    <select id="selClaseInf" onchange="renderInforme()"></select>
     <label>Tipo de informe</label>
     <select id="tipoInforme" onchange="renderInforme()">
-      <option value="actividad">Por actividad</option>
-      <option value="alumno">Por alumno (avance de horas)</option>
-      <option value="periodo">Por período / proyecto</option>
+      <option value="alumno">Por alumno (% de asistencia)</option>
+      <option value="sesion">Por sesión</option>
+      <option value="planilla">Planilla general</option>
     </select>
-    <div id="filtrosInforme"></div>
+    <label>Descargar informe como</label>
+    <div class="fila">
+      <button class="btn verde mini" onclick="exportarInforme('excel')">📊 Excel</button>
+      <button class="btn mini" onclick="exportarInforme('word')" style="background:#2A5B9E">📝 Word</button>
+      <button class="btn peligro mini" onclick="exportarInforme('pdf')">📄 PDF</button>
+    </div>
   </div>
   <div id="cuerpoInforme"></div>
 </section>
 
-<!-- ============ VISTA CONSTANCIA (impresión) ============ -->
-<section class="vista" id="v-constancia">
-  <div class="no-print" style="margin-bottom:12px">
-    <button class="btn" onclick="window.print()">🖨 Imprimir constancia</button>
-    <button class="btn sec" onclick="irVista('v-informes')" style="margin-top:8px">← Volver</button>
-  </div>
-  <div id="cuerpoConstancia"></div>
+<!-- Contenedor para impresión/PDF del informe -->
+<section class="vista" id="v-informe-print">
+  <div id="informePrintable"></div>
 </section>
+
 
 <!-- ============ VISTA CONFIGURACIÓN ============ -->
 <section class="vista" id="v-config">
   <div class="tarjeta">
-    <h3>Institución</h3>
+    <h3>Institución y docente</h3>
     <label>Universidad</label><input id="cfgUni">
     <label>Facultad</label><input id="cfgFac">
     <label>Filial / sede</label><input id="cfgFilial">
-    <label>Responsable de extensión</label><input id="cfgResp">
+    <label>Docente</label><input id="cfgDocente">
     <label>Logo institucional</label>
     <input type="file" id="cfgLogo" accept="image/*" onchange="cargarLogo(this)">
     <div id="logoPrev" style="margin-top:8px"></div>
   </div>
   <div class="tarjeta">
-    <h3>Reglas de acreditación</h3>
-    <label>Meta de horas de extensión (por alumno)</label><input id="cfgMeta" type="number" min="1">
-    <label>Tolerancia de entrada (minutos)</label><input id="cfgTol" type="number" min="0">
-    <label>Redondeo de tiempo (minutos por bloque)</label>
-    <select id="cfgRed"><option value="1">Sin redondeo</option><option value="15">Bloques de 15 min</option><option value="30">Bloques de 30 min</option></select>
+    <h3>Reglas de asistencia</h3>
+    <label>Tolerancia de entrada antes de marcar "TARDE" (minutos)</label>
+    <input id="cfgTol" type="number" min="0" value="10">
+    <label>Asistencia mínima para regularidad (%)</label>
+    <input id="cfgMinAsist" type="number" min="0" max="100" value="70">
   </div>
   <div class="tarjeta">
     <h3>Padrón compartido</h3>
-    <p style="font-size:13px;color:var(--gris);margin-bottom:10px">Archivo común a AsistEXT, CarnetEXT y CertEXT: lleva legajos, cédulas, nombres, carreras y fotos de un aplicativo a otro.</p>
+    <p style="font-size:13px;color:var(--gris);margin-bottom:10px">Archivo común con AsistEXT, CarnetEXT y CertEXT: transporta cédulas, legajos, nombres, carreras y fotos.</p>
     <button class="btn sec" onclick="exportarPadron(false)">⬇ Exportar padrón compartido</button>
     <button class="btn ambar" style="margin-top:8px" onclick="exportarPadron(true)">📤 Compartir padrón…</button>
-    <label style="margin-top:14px">Importar padrón (de CarnetEXT, CertEXT o compartido)</label>
-    <input type="file" id="archivoPadronCompartido" accept=".json" onchange="importarPadronCompartido(this)">
+    <label style="margin-top:14px">Importar padrón a la materia seleccionada abajo</label>
+    <select id="cfgClaseDestino"></select>
+    <input type="file" id="archivoPadron" accept=".json,.txt,application/json,text/plain" style="margin-top:8px" onchange="importarPadronCompartido(this)">
   </div>
   <div class="tarjeta">
-    <h3>Respaldo de datos</h3>
-    <p style="font-size:13px;color:var(--gris);margin-bottom:10px">Al cerrar cada actividad se descarga un respaldo automático. Desde aquí podés generar uno completo, compartirlo a Google Drive o restaurar datos.</p>
+    <h3>Respaldo de registros</h3>
+    <p style="font-size:13px;color:var(--gris);margin-bottom:10px">Se descarga un respaldo automático al cerrar cada sesión. Desde aquí generás uno completo o restaurás.</p>
     <button class="btn" onclick="descargarBackup(false)">⬇ Descargar respaldo completo</button>
     <button class="btn ambar" onclick="compartirBackup()" style="margin-top:8px">📤 Compartir a Drive…</button>
     <label style="margin-top:14px">Restaurar desde archivo</label>
-    <input type="file" id="archivoRestaurar" accept=".json" onchange="restaurarBackup(this)">
+    <input type="file" id="archivoRestaurar" accept=".json,.txt,application/json,text/plain" onchange="restaurarBackup(this)">
   </div>
   <button class="btn" onclick="guardarConfig()">💾 Guardar configuración</button>
 </section>
 
 <nav>
-  <button class="act" data-v="v-registro" onclick="irVista('v-registro')"><span class="ic">🎫</span>Registro</button>
-  <button data-v="v-actividades" onclick="irVista('v-actividades')"><span class="ic">📅</span>Actividades</button>
+  <button class="act" data-v="v-tomar" onclick="irVista('v-tomar')"><span class="ic">✅</span>Asistencia</button>
+  <button data-v="v-clases" onclick="irVista('v-clases')"><span class="ic">📚</span>Materias</button>
   <button data-v="v-alumnos" onclick="irVista('v-alumnos')"><span class="ic">👥</span>Alumnos</button>
   <button data-v="v-informes" onclick="irVista('v-informes')"><span class="ic">📊</span>Informes</button>
   <button data-v="v-config" onclick="irVista('v-config')"><span class="ic">⚙️</span>Config</button>
 </nav>
 
-<!-- Modales -->
 <div class="velo" id="veloModal" onclick="if(event.target===this)cerrarModal()">
   <div class="modal" id="cuerpoModal"></div>
 </div>
@@ -366,700 +353,1011 @@ function bajarArchivo(blob, nombre){
   document.body.appendChild(el); el.click(); el.remove();
   setTimeout(()=>URL.revokeObjectURL(el.href),4000);
 }
+/* Comparte un archivo por el menú del sistema (Drive, WhatsApp, correo...).
+   Chrome/Android no acepta compartir archivos .json, por eso, si hace falta,
+   se comparte el mismo contenido como .txt (la restauración acepta ambos).
+   Siempre informa el resultado al docente. */
 async function compartirArchivo(blob, nombre, titulo){
-  const f=new File([blob], nombre, {type:'application/json'});
-  if(navigator.canShare && navigator.canShare({files:[f]})){
-    try{ await navigator.share({files:[f], title:titulo}); return true; }catch(e){ return false; }
+  const candidatos=[
+    new File([blob], nombre, {type:'application/json'}),
+    new File([blob], nombre.replace(/\.json$/i,'.txt'), {type:'text/plain'})
+  ];
+  const f = navigator.canShare ? candidatos.find(c=>{ try{ return navigator.canShare({files:[c]}); }catch(e){ return false; } }) : null;
+  if(f && navigator.share){
+    try{
+      await navigator.share({files:[f], title:titulo});
+      alert(`✅ Se abrió el menú para compartir "${f.name}".\nSi elegiste Drive, verificá que el archivo aparezca en la carpeta seleccionada.`);
+      return 'compartido';
+    }catch(e){
+      if(e && e.name==='AbortError'){ alert('Compartir cancelado. No se envió ningún archivo.'); return 'cancelado'; }
+      /* Error del sistema (p. ej. se perdió el permiso del toque): se descarga como respaldo */
+    }
   }
-  bajarArchivo(blob, nombre); return false;
+  bajarArchivo(blob, nombre);
+  alert(`Este dispositivo no permitió compartir el archivo directamente.\nSe DESCARGÓ "${nombre}" en la carpeta Descargas.\nPara llevarlo a Drive: abrí la app de Drive → "+" → Subir → elegí ese archivo.`);
+  return 'descargado';
 }
 /* ================================================================
-   AsistEXT — Registro de asistencia a Extensión Universitaria
-   UPE · Facultad de Ciencias Administrativas y Contables · Hernandarias
-   Estado, persistencia, configuración, padrón y carnets
+   AsistClase — Control de asistencia a clases
+   UPE · para docentes de diversas materias y cursos
+   Estado, configuración, materias/cursos y alumnos (nómina)
 ================================================================ */
-const CLAVE = 'asistext_v1';
+const CLAVE='asistclase_v1';
+const DIAS=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
 
-let DB = {
-  config: {
-    uni: 'Universidad Privada del Este',
-    fac: 'Facultad de Ciencias Administrativas y Contables',
-    filial: 'Filial Hernandarias',
-    resp: '',
-    logo: '',            // dataURL base64
-    metaHoras: 100,
-    toleranciaMin: 10,
-    redondeoMin: 15
+let DB={
+  config:{
+    uni:'Universidad Privada del Este',
+    fac:'Facultad de Ciencias Administrativas y Contables',
+    filial:'Filial Hernandarias',
+    docente:'', logo:'',
+    toleranciaMin:10, minAsist:70
   },
-  alumnos: [],           // {id, legajo, nombre, carrera}
-  actividades: [],       // {id, nombre, tipo, proyecto, fecha, lugar, responsable, horas, hIni, hFin, estado:'abierta'|'cerrada', cerradaEn}
-  registros: []          // {id, actId, alumnoId, entrada, salida, estado, minutos, audit:{por,fecha,motivo}}
+  clases:[],     // {id,nombre,curso,turno,anio,dias,hIni,hFin}
+  alumnos:[],    // {id,claseId,doc,tipoDoc,nombre,carrera,institucion,foto,tel,email}
+  sesiones:[],   // {id,claseId,fecha,hIni,hFin,tema,estado,cerradaEn}
+  registros:[]   // {id,sesionId,alumnoId,entrada,salida,estado,minutos}
 };
 
 function guardar(){ localStorage.setItem(CLAVE, JSON.stringify(DB)); }
 function cargarDB(){
   try{
-    const raw = localStorage.getItem(CLAVE);
-    if(raw){ const d = JSON.parse(raw); DB = Object.assign(DB, d); DB.config = Object.assign({
-      uni:'Universidad Privada del Este', fac:'Facultad de Ciencias Administrativas y Contables',
-      filial:'Filial Hernandarias', resp:'', logo:'', metaHoras:100, toleranciaMin:10, redondeoMin:15
-    }, d.config||{}); }
-  }catch(e){ console.error('Error al cargar datos', e); }
+    const raw=localStorage.getItem(CLAVE);
+    if(raw){ const d=JSON.parse(raw);
+      ['clases','alumnos','sesiones','registros'].forEach(k=>{ if(Array.isArray(d[k])) DB[k]=d[k]; });
+      DB.config=Object.assign(DB.config, d.config||{});
+    }
+  }catch(e){ console.error(e); }
 }
-const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
-const esc = s => String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const fmtFecha = iso => { if(!iso) return '—'; const [a,m,d]=iso.split('-'); return `${d}/${m}/${a}`; };
-const fmtHoraTS = ts => ts ? new Date(ts).toLocaleTimeString('es-PY',{hour:'2-digit',minute:'2-digit'}) : '—';
-const fmtHs = min => { const h=Math.floor(min/60), m=min%60; return m? `${h} h ${m} min` : `${h} h`; };
-const hoyISO = () => { const d=new Date(); return d.toISOString().slice(0,10); };
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const hoyISO=()=>new Date().toISOString().slice(0,10);
+const fmtFecha=iso=>{ if(!iso) return '—'; const[a,m,d]=iso.split('-'); return `${d}/${m}/${a}`; };
+const fmtHoraTS=ts=>ts?new Date(ts).toLocaleTimeString('es-PY',{hour:'2-digit',minute:'2-digit'}):'—';
+const fmtHs=min=>{ const h=Math.floor(min/60),m=min%60; return h?(m?`${h} h ${m} min`:`${h} h`):`${m} min`; };
+const iniciales=n=>n.split(/[\s,]+/).filter(Boolean).slice(0,2).map(p=>p[0].toUpperCase()).join('');
+const etDoc=a=>a.tipoDoc==='cedula'?'C.I.':'Legajo';
 
-/* ---------- Navegación ---------- */
+/* ---------- Navegación y modal ---------- */
 function irVista(id){
   document.querySelectorAll('.vista').forEach(v=>{v.classList.remove('act');v.classList.remove('print-obj');});
   document.getElementById(id).classList.add('act');
   document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('act', b.dataset.v===id));
-  if(id==='v-registro') renderRegistro();
-  if(id==='v-actividades') renderActividades();
-  if(id==='v-alumnos') renderAlumnos();
-  if(id==='v-informes') renderInforme();
+  if(id==='v-tomar') renderTomar();
+  if(id==='v-clases') renderClases();
+  if(id==='v-alumnos') { llenarSelectClases('selClaseAlum'); renderAlumnos(); }
+  if(id==='v-informes'){ llenarSelectClases('selClaseInf'); renderInforme(); }
   if(id==='v-config') cargarFormConfig();
 }
-function marcarParaImpresion(id){
-  document.querySelectorAll('.vista').forEach(v=>v.classList.remove('print-obj'));
-  document.getElementById(id).classList.add('print-obj');
-}
-
-/* ---------- Modal genérico ---------- */
-function abrirModal(html){ document.getElementById('cuerpoModal').innerHTML = html; document.getElementById('veloModal').classList.add('act'); }
-function cerrarModal(){ document.getElementById('veloModal').classList.remove('act'); detenerCamaraBarrido(); }
+function abrirModal(html){ cuerpoModal.innerHTML=html; veloModal.classList.add('act'); }
+function cerrarModal(){ veloModal.classList.remove('act'); detenerCamara(); if(typeof detenerCamaraFoto==='function') detenerCamaraFoto(); }
+function marcarParaImpresion(id){ document.querySelectorAll('.vista').forEach(v=>v.classList.remove('print-obj')); document.getElementById(id).classList.add('print-obj'); }
 
 /* ---------- Configuración ---------- */
 function cargarFormConfig(){
-  const c = DB.config;
-  cfgUni.value=c.uni; cfgFac.value=c.fac; cfgFilial.value=c.filial; cfgResp.value=c.resp;
-  cfgMeta.value=c.metaHoras; cfgTol.value=c.toleranciaMin; cfgRed.value=String(c.redondeoMin);
-  logoPrev.innerHTML = c.logo ? `<img src="${c.logo}" style="height:64px;border:1px solid var(--linea);border-radius:8px;padding:4px;background:#fff">` : '<span style="font-size:13px;color:var(--gris)">Sin logo cargado</span>';
+  const c=DB.config;
+  cfgUni.value=c.uni; cfgFac.value=c.fac; cfgFilial.value=c.filial; cfgDocente.value=c.docente;
+  cfgTol.value=c.toleranciaMin; cfgMinAsist.value=c.minAsist;
+  logoPrev.innerHTML=c.logo?`<img src="${c.logo}" style="height:60px;border:1px solid var(--linea);border-radius:8px;padding:4px;background:#fff">`:'<span style="font-size:13px;color:var(--gris)">Sin logo cargado</span>';
+  llenarSelectClases('cfgClaseDestino');
 }
 function guardarConfig(){
-  const c = DB.config;
-  c.uni=cfgUni.value.trim(); c.fac=cfgFac.value.trim(); c.filial=cfgFilial.value.trim(); c.resp=cfgResp.value.trim();
-  c.metaHoras=Math.max(1, parseInt(cfgMeta.value)||100);
-  c.toleranciaMin=Math.max(0, parseInt(cfgTol.value)||0);
-  c.redondeoMin=parseInt(cfgRed.value)||1;
+  const c=DB.config;
+  c.uni=cfgUni.value.trim(); c.fac=cfgFac.value.trim(); c.filial=cfgFilial.value.trim(); c.docente=cfgDocente.value.trim();
+  c.toleranciaMin=Math.max(0,parseInt(cfgTol.value)||0);
+  c.minAsist=Math.min(100,Math.max(0,parseInt(cfgMinAsist.value)||70));
   guardar(); aplicarIdentidad(); alert('Configuración guardada.');
 }
 function cargarLogo(inp){
-  const f = inp.files[0]; if(!f) return;
-  const r = new FileReader();
-  r.onload = () => {
-    const img = new Image();
-    img.onload = () => {
-      const MAX=420, k=Math.min(1, MAX/Math.max(img.width,img.height));
-      const cv=document.createElement('canvas'); cv.width=Math.round(img.width*k); cv.height=Math.round(img.height*k);
-      cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
-      DB.config.logo = cv.toDataURL('image/png'); guardar(); aplicarIdentidad(); cargarFormConfig();
-    };
-    img.src = r.result;
-  };
+  const f=inp.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{ const img=new Image(); img.onload=()=>{
+    const MAX=420,k=Math.min(1,MAX/Math.max(img.width,img.height));
+    const cv=document.createElement('canvas'); cv.width=Math.round(img.width*k); cv.height=Math.round(img.height*k);
+    cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+    DB.config.logo=cv.toDataURL('image/png'); guardar(); aplicarIdentidad(); cargarFormConfig();
+  }; img.src=r.result; };
   r.readAsDataURL(f);
 }
 function aplicarIdentidad(){
   const c=DB.config;
-  instCab.textContent = `${c.fac} — ${c.filial}`;
+  instCab.textContent = c.docente ? `${c.docente} — ${c.filial}` : `${c.fac} — ${c.filial}`;
   if(c.logo){ logoCab.src=c.logo; logoCab.style.display='block'; logoPh.style.display='none'; }
   else { logoCab.style.display='none'; logoPh.style.display='flex'; }
 }
 
-/* ---------- Padrón de alumnos ---------- */
-let fotoTemp='';
+/* ---------- Selects de clase reutilizables ---------- */
+function llenarSelectClases(idSelect, incluirTodas){
+  const sel=document.getElementById(idSelect); if(!sel) return;
+  const prev=sel.value;
+  const lista=DB.clases.slice().sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
+  sel.innerHTML=(incluirTodas?'<option value="">— Todas —</option>':'')+
+    (lista.length?lista.map(c=>`<option value="${c.id}">${esc(c.nombre)}${c.curso?' · '+esc(c.curso):''}</option>`).join('')
+     :'<option value="">(Sin materias)</option>');
+  if(prev && lista.some(c=>c.id===prev)) sel.value=prev;
+}
+
+/* ---------- Materias / cursos ---------- */
+const TURNOS=['Mañana','Tarde','Noche'];
+function abrirModalClase(cl){
+  const diasSel=cl?cl.dias||[]:[];
+  abrirModal(`
+    <h3>${cl?'Editar materia / curso':'Nueva materia / curso'}</h3>
+    <label>Materia</label><input id="mNombre" value="${cl?esc(cl.nombre):''}" placeholder="Ej.: Algoritmia I">
+    <label>Curso / sección</label><input id="mCurso" value="${cl?esc(cl.curso):''}" placeholder="Ej.: 1.º año — Ing. Informática">
+    <div class="fila">
+      <div><label>Turno</label><select id="mTurno">${TURNOS.map(t=>`<option ${cl&&cl.turno===t?'selected':''}>${t}</option>`).join('')}</select></div>
+      <div><label>Año lectivo</label><input id="mAnio" type="number" value="${cl?cl.anio:new Date().getFullYear()}"></div>
+    </div>
+    <label>Días de clase</label>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">${DIAS.map(d=>`<label style="display:flex;align-items:center;gap:4px;margin:0;font-size:13px;text-transform:none;font-weight:500"><input type="checkbox" style="width:auto" value="${d}" ${diasSel.includes(d)?'checked':''} class="chkDia">${d.slice(0,3)}</label>`).join('')}</div>
+    <div class="fila">
+      <div><label>Hora inicio</label><input id="mHIni" type="time" value="${cl?cl.hIni:'19:00'}"></div>
+      <div><label>Hora fin</label><input id="mHFin" type="time" value="${cl?cl.hFin:'22:00'}"></div>
+    </div>
+    <div class="fila" style="margin-top:16px">
+      <button class="btn sec" onclick="cerrarModal()">Cancelar</button>
+      <button class="btn" onclick="guardarClase('${cl?cl.id:''}')">Guardar</button>
+    </div>
+    ${cl?`<button class="btn peligro" style="margin-top:8px" onclick="eliminarClase('${cl.id}')">Eliminar materia</button>`:''}
+  `);
+}
+function guardarClase(id){
+  const nombre=mNombre.value.trim();
+  if(!nombre){ alert('La materia es obligatoria.'); return; }
+  const dias=Array.from(document.querySelectorAll('.chkDia:checked')).map(c=>c.value);
+  const datos={nombre, curso:mCurso.value.trim(), turno:mTurno.value, anio:parseInt(mAnio.value)||new Date().getFullYear(),
+    dias, hIni:mHIni.value||'19:00', hFin:mHFin.value||'22:00'};
+  if(id) Object.assign(DB.clases.find(c=>c.id===id), datos);
+  else DB.clases.push(Object.assign({id:uid()}, datos));
+  guardar(); cerrarModal(); renderClases();
+}
+function eliminarClase(id){
+  const nAl=DB.alumnos.filter(a=>a.claseId===id).length;
+  const nSe=DB.sesiones.filter(s=>s.claseId===id).length;
+  if(!confirm(`¿Eliminar esta materia?\nSe borrarán ${nAl} alumno(s) de su nómina y ${nSe} sesión(es) con sus registros.`)) return;
+  const ses=DB.sesiones.filter(s=>s.claseId===id).map(s=>s.id);
+  DB.registros=DB.registros.filter(r=>!ses.includes(r.sesionId));
+  DB.sesiones=DB.sesiones.filter(s=>s.claseId!==id);
+  DB.alumnos=DB.alumnos.filter(a=>a.claseId!==id);
+  DB.clases=DB.clases.filter(c=>c.id!==id);
+  guardar(); cerrarModal(); renderClases();
+}
+function renderClases(){
+  const lista=DB.clases.slice().sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
+  listaClases.innerHTML = lista.length ? lista.map(c=>{
+    const nAl=DB.alumnos.filter(a=>a.claseId===c.id).length;
+    const nSe=DB.sesiones.filter(s=>s.claseId===c.id).length;
+    return `<div class="item" onclick='abrirModalClase(DB.clases.find(x=>x.id==="${c.id}"))'>
+      <div class="cuerpo"><div class="l1">${esc(c.nombre)}</div>
+      <div class="l2">${esc(c.curso)||'—'} · ${c.turno} ${c.anio} · ${(c.dias||[]).map(d=>d.slice(0,3)).join(', ')||'sin días'} ${c.hIni}–${c.hFin}<br>${nAl} alumno(s) · ${nSe} sesión(es)</div></div>
+      <span style="color:var(--gris)">›</span></div>`;
+  }).join('') : `<div class="vacio"><b>Sin materias</b>Creá tu primera materia o curso.</div>`;
+}
+
+/* ---------- Alumnos (nómina por materia) ---------- */
 function abrirModalAlumno(al){
-  fotoTemp = al&&al.foto ? al.foto : '';
+  const claseId=document.getElementById('selClaseAlum').value;
+  if(!claseId){ alert('Primero seleccioná o creá una materia.'); return; }
   abrirModal(`
     <h3>${al?'Editar alumno':'Nuevo alumno'}</h3>
-    <label>Nº de legajo / matrícula</label><input id="mLegajo" value="${al?esc(al.legajo):''}" ${al?'readonly style="background:#F0F2F6"':''}>
-    <label>Apellido y nombre</label><input id="mNombre" value="${al?esc(al.nombre):''}">
-    <label>Carrera</label><input id="mCarrera" value="${al?esc(al.carrera):''}" placeholder="Ej.: Administración de Empresas">
-    <label>Foto del alumno (opcional)</label>
-    <input type="file" id="mFoto" accept="image/*" onchange="cargarFotoAlumno(this)">
-    <div id="mFotoPrev" style="margin-top:8px">${fotoTemp?fotoPreviewHTML():''}</div>
+    <label>Tipo de documento</label>
+    <select id="mTipoDoc"><option value="cedula" ${al&&al.tipoDoc==='cedula'?'selected':''}>Cédula de identidad</option><option value="legajo" ${!al||al.tipoDoc!=='cedula'?'selected':''}>Legajo / matrícula</option></select>
+    <label>Nº de documento</label><input id="mDoc" value="${al?esc(al.doc):''}" ${al?'readonly style="background:#F0F2F6"':''}>
+    <label>Apellido y nombre</label><input id="mNom" value="${al?esc(al.nombre):''}">
+    <label>Carrera</label><input id="mCarrera" value="${al?esc(al.carrera):''}" placeholder="Ej.: Ing. Informática">
+    <label>Foto (opcional)</label>
+    <div id="mFotoPrev" style="margin-bottom:8px">${al&&al.foto?fotoPrevHTML(al.foto):''}</div>
+    <div class="fila">
+      <button class="btn sec mini" onclick="iniciarCamaraFoto()">📷 Tomar foto</button>
+      <button class="btn sec mini" onclick="document.getElementById('mFoto').click()">🖼 Galería</button>
+    </div>
+    <input type="file" id="mFoto" accept="image/*" style="display:none" onchange="cargarFotoAlumno(this)">
+    <div id="camFotoWrap" style="display:none;margin-top:8px">
+      <video id="videoFoto" playsinline muted style="width:100%;border-radius:8px;background:#000;max-height:340px;object-fit:cover"></video>
+      <div class="fila" style="margin-top:8px">
+        <button class="btn" onclick="capturarFoto()">📸 Capturar</button>
+        <button class="btn sec" onclick="detenerCamaraFoto()">✕ Cancelar</button>
+      </div>
+    </div>
     <div class="fila" style="margin-top:16px">
       <button class="btn sec" onclick="cerrarModal()">Cancelar</button>
       <button class="btn" onclick="guardarAlumno('${al?al.id:''}')">Guardar</button>
     </div>
-    ${al?`<button class="btn peligro" style="margin-top:8px" onclick="eliminarAlumno('${al.id}')">Eliminar alumno</button>`:''}
+    ${al?`
+    <hr class="sep">
+    <div class="fila">
+      <button class="btn sec" onclick="descargarCarnetUno('${al.id}')">🪪 Carnet PNG</button>
+      <button class="btn sec" onclick="imprimirCarnetUno('${al.id}')">🖨 Imprimir carnet</button>
+    </div>
+    ${DB.clases.length>1?`
+    <label>Mover a otra materia</label>
+    <div class="fila">
+      <select id="mMover">${DB.clases.filter(c=>c.id!==al.claseId).map(c=>`<option value="${c.id}">${esc(c.nombre)}${c.curso?' · '+esc(c.curso):''}</option>`).join('')}</select>
+      <button class="btn sec" style="flex:none" onclick="moverAlumno('${al.id}')">Mover</button>
+    </div>`:''}
+    <button class="btn peligro" style="margin-top:12px" onclick="eliminarAlumno('${al.id}')">Quitar de la nómina</button>`:''}
   `);
+  fotoTemp = al&&al.foto ? al.foto : '';
 }
-function fotoPreviewHTML(){
-  return `<div class="fila" style="align-items:center"><img src="${fotoTemp}" style="width:64px;height:78px;object-fit:cover;border-radius:8px;border:1px solid var(--linea);flex:none">
-  <button class="btn mini peligro" style="flex:none" onclick="quitarFotoTemp()">Quitar foto</button></div>`;
+function moverAlumno(id){
+  const destino=document.getElementById('mMover').value; if(!destino) return;
+  const a=DB.alumnos.find(x=>x.id===id); if(!a) return;
+  if(DB.alumnos.some(x=>x.claseId===destino && x.doc===a.doc && (x.tipoDoc||'legajo')===(a.tipoDoc||'legajo'))){ alert('Ese alumno ya está en la materia de destino.'); return; }
+  const nReg=DB.registros.filter(r=>r.alumnoId===id).length;
+  if(nReg && !confirm(`El alumno tiene ${nReg} registro(s) de asistencia en la materia actual, que se borrarán al mover (fueron tomados en la materia equivocada).\n¿Continuar?`)) return;
+  DB.registros=DB.registros.filter(r=>r.alumnoId!==id);
+  a.claseId=destino;
+  guardar(); cerrarModal();
+  const cl=DB.clases.find(c=>c.id===destino);
+  alert(`Alumno movido a "${cl.nombre}".`);
+  renderAlumnos();
 }
+let fotoTemp='';
+function fotoPrevHTML(src){ return `<div class="fila" style="align-items:center"><img src="${src}" style="width:60px;height:74px;object-fit:cover;border-radius:8px;border:1px solid var(--linea);flex:none"><button class="btn mini peligro" style="flex:none" onclick="quitarFotoTemp()">Quitar</button></div>`; }
 function quitarFotoTemp(){ fotoTemp=''; document.getElementById('mFotoPrev').innerHTML=''; document.getElementById('mFoto').value=''; }
+let streamFoto=null;
+async function iniciarCamaraFoto(){
+  const wrap=document.getElementById('camFotoWrap'), v=document.getElementById('videoFoto');
+  if(!wrap||!v) return;
+  try{
+    streamFoto=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user', width:{ideal:720}, height:{ideal:960}}});
+    v.srcObject=streamFoto; wrap.style.display='block'; await v.play();
+    wrap.scrollIntoView({behavior:'smooth', block:'center'});
+  }catch(e){
+    alert('No se pudo activar la cámara: '+e.message+'\nProbá con la opción Galería (también permite usar la cámara del teléfono).');
+  }
+}
+function detenerCamaraFoto(){
+  if(streamFoto){ streamFoto.getTracks().forEach(t=>t.stop()); streamFoto=null; }
+  const wrap=document.getElementById('camFotoWrap'); if(wrap) wrap.style.display='none';
+  const v=document.getElementById('videoFoto'); if(v) v.srcObject=null;
+}
+function capturarFoto(){
+  const v=document.getElementById('videoFoto');
+  if(!v||!streamFoto||!v.videoWidth){ alert('La cámara aún no está lista.'); return; }
+  const vw=v.videoWidth, vh=v.videoHeight;
+  const objetivo=330/400;                 // recorte retrato tipo credencial (ancho/alto)
+  let cw=vw, ch=vw/objetivo;
+  if(ch>vh){ ch=vh; cw=vh*objetivo; }
+  const sx=(vw-cw)/2, sy=(vh-ch)/2;
+  const MAX=360, k=Math.min(1, MAX/Math.max(cw,ch));
+  const cv=document.createElement('canvas'); cv.width=Math.round(cw*k); cv.height=Math.round(ch*k);
+  cv.getContext('2d').drawImage(v, sx,sy,cw,ch, 0,0,cv.width,cv.height);
+  fotoTemp=cv.toDataURL('image/jpeg',0.8);
+  const prev=document.getElementById('mFotoPrev'); if(prev) prev.innerHTML=fotoPrevHTML(fotoTemp);
+  detenerCamaraFoto();
+}
 function cargarFotoAlumno(inp){
   const f=inp.files[0]; if(!f) return;
   const r=new FileReader();
-  r.onload=()=>{
-    const img=new Image();
-    img.onload=()=>{
-      const MAX=360, k=Math.min(1, MAX/Math.max(img.width,img.height));
-      const cv=document.createElement('canvas'); cv.width=Math.round(img.width*k); cv.height=Math.round(img.height*k);
-      cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
-      fotoTemp=cv.toDataURL('image/jpeg',0.8);
-      document.getElementById('mFotoPrev').innerHTML=fotoPreviewHTML();
-    };
-    img.src=r.result;
-  };
+  r.onload=()=>{ const img=new Image(); img.onload=()=>{
+    const MAX=360,k=Math.min(1,MAX/Math.max(img.width,img.height));
+    const cv=document.createElement('canvas'); cv.width=Math.round(img.width*k); cv.height=Math.round(img.height*k);
+    cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+    fotoTemp=cv.toDataURL('image/jpeg',0.8); document.getElementById('mFotoPrev').innerHTML=fotoPrevHTML(fotoTemp);
+  }; img.src=r.result; };
   r.readAsDataURL(f);
 }
 function guardarAlumno(id){
-  const legajo=mLegajo.value.trim(), nombre=mNombre.value.trim(), carrera=mCarrera.value.trim();
-  if(!legajo||!nombre){ alert('Legajo y nombre son obligatorios.'); return; }
-  if(!id && DB.alumnos.some(a=>a.legajo===legajo)){ alert('Ya existe un alumno con ese legajo.'); return; }
+  const claseId=document.getElementById('selClaseAlum').value;
+  const tipoDoc=mTipoDoc.value, doc=mDoc.value.trim(), nombre=mNom.value.trim(), carrera=mCarrera.value.trim();
+  if(!doc||!nombre){ alert('Documento y nombre son obligatorios.'); return; }
+  if(!id && DB.alumnos.some(a=>a.claseId===claseId && a.doc===doc && a.tipoDoc===tipoDoc)){ alert('Ese documento ya está en la nómina de esta materia.'); return; }
   if(id){ const a=DB.alumnos.find(x=>x.id===id); a.nombre=nombre; a.carrera=carrera; a.foto=fotoTemp; }
-  else DB.alumnos.push({id:uid(), legajo, nombre, carrera, foto:fotoTemp});
+  else DB.alumnos.push({id:uid(), claseId, doc, tipoDoc, nombre, carrera, institucion:'', foto:fotoTemp, tel:'', email:''});
   guardar(); cerrarModal(); renderAlumnos();
 }
-function iniciales(nombre){ return nombre.split(/[\s,]+/).filter(Boolean).slice(0,2).map(p=>p[0].toUpperCase()).join(''); }
 function eliminarAlumno(id){
-  if(DB.registros.some(r=>r.alumnoId===id)){ alert('No se puede eliminar: el alumno tiene registros de asistencia.'); return; }
-  if(!confirm('¿Eliminar este alumno del padrón?')) return;
-  DB.alumnos = DB.alumnos.filter(a=>a.id!==id); guardar(); cerrarModal(); renderAlumnos();
+  const al=DB.alumnos.find(a=>a.id===id);
+  if(!al) return;
+  const nReg=DB.registros.filter(r=>r.alumnoId===id).length;
+  const msj = nReg
+    ? `Este alumno tiene ${nReg} registro(s) de asistencia.\nAl quitarlo de la nómina también se borrarán esos registros y dejará de figurar en los informes.\n¿Continuar?`
+    : '¿Quitar este alumno de la nómina?';
+  if(!confirm(msj)) return;
+  DB.registros = DB.registros.filter(r=>r.alumnoId!==id);
+  DB.alumnos = DB.alumnos.filter(a=>a.id!==id);
+  guardar(); cerrarModal(); renderAlumnos();
 }
-function abrirModalImportar(){
+function abrirModalMoverNomina(){
+  const origen=document.getElementById('selClaseAlum').value;
+  if(!origen){ alert('Seleccioná la materia de origen.'); return; }
+  const otras=DB.clases.filter(c=>c.id!==origen);
+  if(!otras.length){ alert('Necesitás otra materia como destino. Creala primero en la pestaña Materias.'); return; }
+  const n=DB.alumnos.filter(a=>a.claseId===origen).length;
+  if(!n){ alert('La nómina de esta materia está vacía.'); return; }
+  const clO=DB.clases.find(c=>c.id===origen);
   abrirModal(`
-    <h3>Importar lista de alumnos</h3>
-    <p class="sub">Pegá una línea por alumno con el formato:<br><b>legajo;apellido y nombre;carrera</b></p>
-    <textarea id="mImport" rows="8" placeholder="1023;Benítez, Carlos;Administración de Empresas&#10;1041;Ríos, Marta;Contaduría Pública"></textarea>
+    <h3>Mover nómina a otra materia</h3>
+    <p class="sub">Origen: <b>${esc(clO.nombre)}</b> — ${n} alumno(s).</p>
+    <label>Materia de destino</label>
+    <select id="mDestino">${otras.map(c=>`<option value="${c.id}">${esc(c.nombre)}${c.curso?' · '+esc(c.curso):''}</option>`).join('')}</select>
+    <label style="display:flex;align-items:center;gap:6px;text-transform:none;font-weight:500;margin-top:12px"><input type="checkbox" id="mSoloSin" style="width:auto" checked> Mover solo alumnos sin asistencia registrada</label>
+    <p style="font-size:12px;color:var(--gris);margin-top:6px">Los alumnos que ya existan en la materia de destino se unifican (no se duplican).</p>
     <div class="fila" style="margin-top:16px">
       <button class="btn sec" onclick="cerrarModal()">Cancelar</button>
-      <button class="btn" onclick="importarLista()">Importar</button>
+      <button class="btn" onclick="ejecutarMoverNomina('${origen}')">Mover nómina</button>
     </div>
   `);
 }
-function importarLista(){
-  let ok=0, dup=0, mal=0;
+function ejecutarMoverNomina(origen){
+  const destino=document.getElementById('mDestino').value;
+  const soloSin=document.getElementById('mSoloSin').checked;
+  let movidos=0, saltados=0, unificados=0;
+  DB.alumnos.filter(a=>a.claseId===origen).slice().forEach(a=>{
+    const tieneReg=DB.registros.some(r=>r.alumnoId===a.id);
+    if(soloSin && tieneReg){ saltados++; return; }
+    const dup=DB.alumnos.find(x=>x.claseId===destino && x.doc===a.doc && (x.tipoDoc||'legajo')===(a.tipoDoc||'legajo'));
+    DB.registros=DB.registros.filter(r=>r.alumnoId!==a.id);   // registros del origen no se arrastran
+    if(dup){ DB.alumnos=DB.alumnos.filter(x=>x.id!==a.id); unificados++; }
+    else { a.claseId=destino; movidos++; }
+  });
+  guardar(); cerrarModal(); renderAlumnos();
+  const cl=DB.clases.find(c=>c.id===destino);
+  alert(`Movidos a "${cl.nombre}": ${movidos}${saltados?` · ${saltados} con asistencia (no movidos)`:''}${unificados?` · ${unificados} ya existían (unificados)`:''}.`);
+}
+function abrirModalImportar(){
+  const claseId=document.getElementById('selClaseAlum').value;
+  if(!claseId){ alert('Primero seleccioná o creá una materia.'); return; }
+  abrirModal(`
+    <h3>Importar nómina</h3>
+    <p class="sub">Una línea por alumno, con este formato exacto:<br><b>documento;apellido y nombre;carrera</b><br>El primer campo es la cédula o el legajo (lo que uses para escanear).</p>
+    <textarea id="mImport" rows="8" placeholder="4567890;Benítez, Carlos;Ing. Informática&#10;5123456;Ríos, Marta;Ing. Informática"></textarea>
+    <label>Tipo de documento de esta nómina</label>
+    <select id="mTipoImport"><option value="cedula">Cédula de identidad</option><option value="legajo">Legajo / matrícula</option></select>
+    <div class="fila" style="margin-top:16px">
+      <button class="btn sec" onclick="cerrarModal()">Cancelar</button>
+      <button class="btn" onclick="importarNomina()">Importar</button>
+    </div>
+  `);
+}
+function importarNomina(){
+  const claseId=document.getElementById('selClaseAlum').value;
+  const tipoDoc=document.getElementById('mTipoImport').value;
+  let ok=0,dup=0,mal=0;
   mImport.value.split('\n').map(l=>l.trim()).filter(Boolean).forEach(l=>{
     const p=l.split(';').map(x=>x.trim());
     if(p.length<2||!p[0]||!p[1]){ mal++; return; }
-    if(DB.alumnos.some(a=>a.legajo===p[0])){ dup++; return; }
-    DB.alumnos.push({id:uid(), legajo:p[0], nombre:p[1], carrera:p[2]||''}); ok++;
+    if(DB.alumnos.some(a=>a.claseId===claseId && a.doc===p[0] && a.tipoDoc===tipoDoc)){ dup++; return; }
+    DB.alumnos.push({id:uid(), claseId, doc:p[0], tipoDoc, nombre:p[1], carrera:p[2]||'', institucion:'', foto:'', tel:'', email:''}); ok++;
   });
   guardar(); cerrarModal(); renderAlumnos();
-  alert(`Importación: ${ok} agregados · ${dup} duplicados omitidos · ${mal} líneas inválidas.`);
+  alert(`Importación: ${ok} agregados · ${dup} duplicados · ${mal} líneas inválidas.`);
 }
 function renderAlumnos(){
+  const claseId=document.getElementById('selClaseAlum').value;
   const q=(buscarAlumno.value||'').toLowerCase();
-  const lista=DB.alumnos.filter(a=>!q||a.nombre.toLowerCase().includes(q)||a.legajo.toLowerCase().includes(q))
-    .sort((a,b)=>a.nombre.localeCompare(b.nombre));
-  listaAlumnos.innerHTML = lista.length ? lista.map(a=>{
-    const min=horasAcumuladas(a.id);
-    const av = a.foto ? `<img class="avatar" src="${a.foto}">` : `<div class="avatar-ph">${iniciales(a.nombre)}</div>`;
-    return `<div class="item" onclick="abrirModalAlumno(DB.alumnos.find(x=>x.id==='${a.id}'))">
-      ${av}<div class="cuerpo"><div class="l1">${esc(a.nombre)}</div>
-      <div class="l2">${a.tipoDoc==='cedula'?'C.I.':'Legajo'} ${esc(a.legajo)}${(a.carrera||a.institucion)?' · '+esc(a.carrera||a.institucion):''} · ${fmtHs(min)} acreditadas</div></div>
-      <span style="color:var(--gris)">›</span></div>`;
-  }).join('') : `<div class="vacio"><b>Padrón vacío</b>Agregá alumnos o importá una lista.</div>`;
-}
-
-/* ---------- Padrón compartido con CarnetEXT y CertEXT ---------- */
-function importarPadronCompartido(inp){
-  const f=inp.files[0]; if(!f) return;
-  const r=new FileReader();
-  r.onload=()=>{
-    try{
-      const {personas, origen, config}=leerPadronUniversal(JSON.parse(r.result));
-      if(config && config.logo && !DB.config.logo) DB.config.logo=config.logo;
-      let nuevos=0, actualizados=0;
-      personas.forEach(p=>{
-        const ex=DB.alumnos.find(x=>String(x.legajo)===p.doc && (x.tipoDoc||'legajo')===p.tipoDoc);
-        if(ex){
-          const destino={nombre:ex.nombre, carrera:ex.carrera||'', institucion:ex.institucion||'', foto:ex.foto||'', tel:ex.tel||'', email:ex.email||''};
-          if(fusionarPersona(destino,p)){ Object.assign(ex,destino); actualizados++; }
-        } else {
-          DB.alumnos.push({id:uid(), legajo:p.doc, tipoDoc:p.tipoDoc, nombre:p.nombre, carrera:p.carrera,
-                           institucion:p.institucion, foto:p.foto, tel:p.tel, email:p.email}); nuevos++;
-        }
-      });
-      guardar(); aplicarIdentidad(); renderAlumnos();
-      alert(`Padrón importado desde ${origen}.\n${nuevos} persona(s) nueva(s) · ${actualizados} actualizada(s).`);
-    }catch(e){ alert('No se pudo importar: '+e.message); }
-    inp.value='';
-  };
-  r.readAsText(f);
-}
-function exportarPadron(compartir){
-  if(!DB.alumnos.length){ alert('El padrón está vacío.'); return; }
-  const personas=DB.alumnos.map(a=>({doc:a.legajo, tipoDoc:a.tipoDoc||'legajo', nombre:a.nombre,
-    carrera:a.carrera||'', institucion:a.institucion||'', foto:a.foto||'', tel:a.tel||'', email:a.email||''}));
-  const {blob,nombre}=armarPadronCompartido(personas, DB.config);
-  if(compartir) compartirArchivo(blob,nombre,'Padrón compartido');
-  else { bajarArchivo(blob,nombre); alert(`Padrón exportado: ${nombre}\n${personas.length} persona(s), con fotos.\nSe puede importar en CarnetEXT y CertEXT.`); }
-}
-
-/* ---------- Carnets ---------- */
-function prepararCarnets(){
-  if(!DB.alumnos.length){ alert('No hay alumnos en el padrón.'); return; }
-  const c=DB.config;
-  gridCarnets.innerHTML = DB.alumnos.slice().sort((a,b)=>a.nombre.localeCompare(b.nombre)).map(a=>`
-    <div class="carnet">
-      <div class="franja">${c.logo?`<img src="${c.logo}">`:''}<div class="t"><b>${esc(c.uni)}</b>${esc(c.fac)} · ${esc(c.filial)}</div></div>
-      <div class="datos">${a.foto?`<img class="foto" src="${a.foto}">`:`<div class="foto-ph">👤</div>`}<div><div class="nom">${esc(a.nombre)}</div><div class="car">${esc(a.carrera||a.institucion)||'Extensión Universitaria'} · ${a.tipoDoc==='cedula'?'C.I.':'Legajo'} ${esc(a.legajo)}</div></div></div>
-      <svg class="cb" data-leg="${esc(a.legajo)}"></svg>
-      <div class="pie">CREDENCIAL DE EXTENSIÓN UNIVERSITARIA</div>
-    </div>`).join('');
-  document.querySelectorAll('#gridCarnets svg.cb').forEach(svg=>{
-    try{ JsBarcode(svg, svg.dataset.leg, {format:'CODE128', height:52, width:2, fontSize:13, margin:6}); }
-    catch(e){ svg.outerHTML = `<div style="color:var(--rojo);font-size:12px;text-align:center;padding:8px">No se pudo generar el código (¿sin conexión para cargar JsBarcode?)</div>`; }
-  });
-  irVista('v-carnets'); marcarParaImpresion('v-carnets');
+  const lista=DB.alumnos.filter(a=>a.claseId===claseId && (!q||a.nombre.toLowerCase().includes(q)||String(a.doc).toLowerCase().includes(q)))
+    .sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
+  listaAlumnos.innerHTML = !claseId ? `<div class="vacio">Seleccioná una materia.</div>`
+    : lista.length ? lista.map(a=>{
+      const pct=pctAsistencia(a.id, claseId);
+      const av=a.foto?`<img class="avatar" src="${a.foto}">`:`<div class="avatar-ph">${iniciales(a.nombre)}</div>`;
+      return `<div class="item" onclick='abrirModalAlumno(DB.alumnos.find(x=>x.id==="${a.id}"))'>
+        ${av}<div class="cuerpo"><div class="l1">${esc(a.nombre)}</div>
+        <div class="l2">${etDoc(a)} ${esc(a.doc)}${a.carrera?' · '+esc(a.carrera):''}${pct!==null?` · <b>${pct}%</b> asist.`:''}</div></div>
+        <span style="color:var(--gris)">›</span></div>`;
+    }).join('') : `<div class="vacio"><b>Nómina vacía</b>Agregá alumnos o importá la lista.</div>`;
 }
 /* ================================================================
-   Actividades, escaneo, entrada/salida, cierre con barrido,
-   regularización y cálculo de horas
+   Sesiones de clase, escaneo (cámara + USB), entrada/salida,
+   cálculo de estado (presente/tarde/ausente) y cierre
 ================================================================ */
-const TIPOS_ACT = ['Charla / conferencia','Capacitación / taller','Servicio comunitario','Feria / exposición','Jornada académica','Campaña solidaria','Otro'];
 
-/* ---------- ABM de actividades ---------- */
-function abrirModalActividad(act){
+/* ---------- Estado y % de asistencia ---------- */
+function calcularMinutos(reg){
+  if(!reg.entrada||!reg.salida) return 0;
+  return Math.max(0, Math.round((reg.salida-reg.entrada)/60000));
+}
+/* Sesiones cerradas de una clase */
+function sesionesCerradas(claseId){ return DB.sesiones.filter(s=>s.claseId===claseId && s.estado==='cerrada'); }
+/* % de asistencia: sesiones con presente/tarde/retirado sobre total de sesiones cerradas */
+const ESTADOS_PRESENTE=['PRESENTE','TARDE','RETIRADO','EN_CURSO'];
+function pctAsistencia(alumnoId, claseId){
+  const ses=sesionesCerradas(claseId);
+  if(!ses.length) return null;
+  let asistio=0;
+  ses.forEach(s=>{
+    const r=DB.registros.find(x=>x.sesionId===s.id && x.alumnoId===alumnoId);
+    if(r && ESTADOS_PRESENTE.includes(r.estado)) asistio++;
+  });
+  return Math.round(asistio/ses.length*100);
+}
+function semAsist(pct){ const m=DB.config.minAsist; return pct>=m?'v':(pct>=m-15?'a':'r'); }
+
+/* ---------- Vista Tomar asistencia ---------- */
+let claseActId=null, sesionActId=null, modoRegistro='entrada';
+function renderTomar(){
+  llenarSelectClases('selClase');
+  if(!DB.clases.some(c=>c.id===claseActId)) claseActId=DB.clases[0]?.id||null;
+  if(claseActId) selClase.value=claseActId;
+  cambiarClase();
+}
+function cambiarClase(){
+  claseActId=selClase.value||null;
+  const abiertas=DB.sesiones.filter(s=>s.claseId===claseActId).sort((a,b)=>(b.fecha).localeCompare(a.fecha));
+  selSesion.innerHTML = abiertas.length
+    ? abiertas.map(s=>`<option value="${s.id}">${fmtFecha(s.fecha)} · ${s.hIni}–${s.hFin}${s.estado==='cerrada'?' (cerrada)':''}</option>`).join('')
+    : '<option value="">(Sin sesiones)</option>';
+  if(!abiertas.some(s=>s.id===sesionActId)) sesionActId=abiertas.find(s=>s.estado==='abierta')?.id || abiertas[0]?.id || null;
+  if(sesionActId) selSesion.value=sesionActId;
+  cambiarSesion();
+}
+function cambiarSesion(){
+  sesionActId=selSesion.value||null;
+  const s=DB.sesiones.find(x=>x.id===sesionActId);
+  const abierta = s && s.estado==='abierta';
+  panelEscaneo.style.display = abierta?'block':'none';
+  tarjetaPresentes.style.display = s?'block':'none';
+  const accSesion=document.getElementById('accionesSesion');
+  if(accSesion) accSesion.style.display = abierta?'flex':'none';
+  const avisoCerr=document.getElementById('avisoSesionCerrada');
+  if(avisoCerr) avisoCerr.style.display = (s&&!abierta)?'block':'none';
+  const cl=DB.clases.find(c=>c.id===claseActId);
+  infoSesion.innerHTML = s
+    ? `${cl?esc(cl.nombre):''} · ${fmtFecha(s.fecha)} · ${s.hIni}–${s.hFin}${s.tema?' · '+esc(s.tema):''} <span class="chip ${s.estado}">${s.estado.toUpperCase()}</span>`
+    : (cl?'Creá una sesión para tomar asistencia (botón ＋ Sesión).':'Seleccioná una materia.');
+  renderNomina();
+}
+function abrirModalSesion(){
+  if(!claseActId){ alert('Primero seleccioná una materia.'); return; }
+  const cl=DB.clases.find(c=>c.id===claseActId);
   abrirModal(`
-    <h3>${act?'Editar actividad':'Nueva actividad de extensión'}</h3>
-    <label>Nombre de la actividad</label><input id="mActNom" value="${act?esc(act.nombre):''}" placeholder="Ej.: Feria de emprendedores 2026">
-    <label>Tipo</label><select id="mActTipo">${TIPOS_ACT.map(t=>`<option ${act&&act.tipo===t?'selected':''}>${t}</option>`).join('')}</select>
-    <label>Proyecto / programa</label><input id="mActProy" value="${act?esc(act.proyecto):''}" placeholder="Ej.: Vinculación con la comunidad">
-    <label>Fecha</label><input id="mActFecha" type="date" value="${act?act.fecha:hoyISO()}">
+    <h3>Nueva sesión de clase</h3>
+    <p class="sub">${esc(cl.nombre)}${cl.curso?' · '+esc(cl.curso):''}</p>
+    <label>Fecha</label><input id="sFecha" type="date" value="${hoyISO()}">
     <div class="fila">
-      <div><label>Hora inicio</label><input id="mActIni" type="time" value="${act?act.hIni:'08:00'}"></div>
-      <div><label>Hora fin</label><input id="mActFin" type="time" value="${act?act.hFin:'12:00'}"></div>
+      <div><label>Hora inicio</label><input id="sHIni" type="time" value="${cl.hIni}"></div>
+      <div><label>Hora fin</label><input id="sHFin" type="time" value="${cl.hFin}"></div>
     </div>
-    <label>Horas acreditables (máximo por alumno)</label><input id="mActHoras" type="number" step="0.5" min="0.5" value="${act?act.horas:4}">
-    <label>Lugar</label><input id="mActLugar" value="${act?esc(act.lugar):''}">
-    <label>Responsable</label><input id="mActResp" value="${act?esc(act.responsable):esc(DB.config.resp)}">
+    <label>Tema / unidad (opcional)</label><input id="sTema" placeholder="Ej.: Unidad 3 — Estructuras de control">
     <div class="fila" style="margin-top:16px">
       <button class="btn sec" onclick="cerrarModal()">Cancelar</button>
-      <button class="btn" onclick="guardarActividad('${act?act.id:''}')">Guardar</button>
+      <button class="btn" onclick="crearSesion()">Crear y abrir</button>
     </div>
   `);
 }
-function guardarActividad(id){
-  const nombre=mActNom.value.trim();
-  if(!nombre){ alert('El nombre es obligatorio.'); return; }
-  const datos={nombre, tipo:mActTipo.value, proyecto:mActProy.value.trim(), fecha:mActFecha.value||hoyISO(),
-    hIni:mActIni.value||'08:00', hFin:mActFin.value||'12:00',
-    horas:Math.max(0.5, parseFloat(mActHoras.value)||1), lugar:mActLugar.value.trim(), responsable:mActResp.value.trim()};
-  if(datos.hFin<=datos.hIni){ alert('La hora de fin debe ser posterior a la de inicio.'); return; }
-  if(id){ Object.assign(DB.actividades.find(a=>a.id===id), datos); }
-  else DB.actividades.push(Object.assign({id:uid(), estado:'abierta', cerradaEn:null}, datos));
-  guardar(); cerrarModal(); renderActividades(); renderRegistro();
-}
-function renderActividades(){
-  const lista=DB.actividades.slice().sort((a,b)=> (b.fecha+b.hIni).localeCompare(a.fecha+a.hIni));
-  listaActividades.innerHTML = lista.length ? lista.map(a=>{
-    const regs=DB.registros.filter(r=>r.actId===a.id);
-    const pend=regs.filter(r=>r.estado==='PENDIENTE').length;
-    return `<div class="item" onclick="verActividad('${a.id}')">
-      <div class="cuerpo">
-        <div class="l1">${esc(a.nombre)} <span class="chip ${a.estado}">${a.estado.toUpperCase()}</span></div>
-        <div class="l2">${fmtFecha(a.fecha)} · ${a.hIni}–${a.hFin} · ${a.horas} hs acreditables · ${regs.length} registro(s)${pend?` · <b style="color:var(--rojo)">${pend} pendiente(s)</b>`:''}</div>
-      </div><span style="color:var(--gris)">›</span></div>`;
-  }).join('') : `<div class="vacio"><b>Sin actividades</b>Creá la primera actividad de extensión.</div>`;
-}
-function verActividad(id){
-  const a=DB.actividades.find(x=>x.id===id);
-  const regs=DB.registros.filter(r=>r.actId===id).sort((x,y)=>(x.entrada||0)-(y.entrada||0));
-  const filas = regs.length ? regs.map(r=>{
-    const al=DB.alumnos.find(x=>x.id===r.alumnoId)||{nombre:'(baja)',legajo:'—'};
-    const acc = r.estado==='PENDIENTE' ? `<button class="btn mini ambar" onclick="event.stopPropagation();abrirRegularizar('${r.id}')">Regularizar</button>` : '';
-    const audit = r.audit ? `<div style="font-size:11px;color:var(--violeta)">Reg. por ${esc(r.audit.por)} el ${new Date(r.audit.fecha).toLocaleString('es-PY')} — ${esc(r.audit.motivo)}</div>` : '';
-    return `<div class="item"><div class="cuerpo">
-      <div class="l1">${esc(al.nombre)} <span class="chip ${r.estado.toLowerCase().replace('_','')}">${r.estado.replace('_',' ')}</span></div>
-      <div class="l2">Entrada ${fmtHoraTS(r.entrada)} · Salida ${fmtHoraTS(r.salida)} · <b>${fmtHs(r.minutos||0)}</b></div>${audit}
-    </div>${acc}</div>`;
-  }).join('') : `<div class="vacio">Sin registros de asistencia.</div>`;
-  abrirModal(`
-    <h3>${esc(a.nombre)} <span class="chip ${a.estado}">${a.estado.toUpperCase()}</span></h3>
-    <p class="sub">${a.tipo} · ${fmtFecha(a.fecha)} · ${a.hIni}–${a.hFin} · ${a.horas} hs acreditables${a.lugar?' · '+esc(a.lugar):''}${a.proyecto?'<br>Proyecto: '+esc(a.proyecto):''}</p>
-    ${a.estado==='abierta'?`
-      <div class="fila">
-        <button class="btn sec" onclick='cerrarModal();abrirModalActividad(${JSON.stringify(a).replace(/'/g,"&#39;")})'>✎ Editar</button>
-        <button class="btn peligro" onclick="iniciarCierre('${a.id}')">⏹ Cerrar actividad</button>
-      </div>`:`
-      <button class="btn sec" onclick="descargarBackup(false,'${a.id}')">⬇ Respaldo de esta actividad</button>`}
-    <hr class="sep"><h3 style="font-size:15px">Registros (${regs.length})</h3>${filas}
-    <button class="btn sec" style="margin-top:12px" onclick="cerrarModal()">Cerrar ventana</button>
-  `);
-}
-
-/* ---------- Cálculo de horas acreditadas ---------- */
-function calcularMinutos(reg, act){
-  if(!reg.entrada || !reg.salida) return 0;
-  const base = new Date(act.fecha+'T00:00:00').getTime();
-  const [hi,mi]=act.hIni.split(':').map(Number), [hf,mf]=act.hFin.split(':').map(Number);
-  const tIni = base + (hi*60+mi)*60000, tFin = base + (hf*60+mf)*60000;
-  let ent = reg.entrada;
-  if(ent <= tIni + DB.config.toleranciaMin*60000) ent = tIni;   // tolerancia: llegó "a tiempo"
-  ent = Math.max(ent, tIni);
-  const sal = Math.min(reg.salida, tFin);
-  let min = Math.max(0, Math.round((sal-ent)/60000));
-  const bloque = DB.config.redondeoMin||1;
-  if(bloque>1) min = Math.round(min/bloque)*bloque;             // redondeo al bloque más cercano
-  return Math.min(min, Math.round(act.horas*60));               // tope: horas declaradas
-}
-function horasAcumuladas(alumnoId){
-  return DB.registros.filter(r=>r.alumnoId===alumnoId && (r.estado==='COMPLETO'||r.estado==='REGULARIZADO'))
-    .reduce((s,r)=>s+(r.minutos||0),0);
-}
-
-/* ---------- Vista Registro: selección de actividad ---------- */
-let actActivaId=null, modoRegistro='entrada';
-function renderRegistro(){
-  const abiertas=DB.actividades.filter(a=>a.estado==='abierta').sort((a,b)=>(b.fecha+b.hIni).localeCompare(a.fecha+a.hIni));
-  selActividad.innerHTML = abiertas.length
-    ? abiertas.map(a=>`<option value="${a.id}">${esc(a.nombre)} — ${fmtFecha(a.fecha)}</option>`).join('')
-    : `<option value="">(No hay actividades abiertas)</option>`;
-  if(!abiertas.some(a=>a.id===actActivaId)) actActivaId = abiertas[0]?.id || null;
-  if(actActivaId) selActividad.value=actActivaId;
-  cambiarActividadActiva();
-}
-function cambiarActividadActiva(){
-  actActivaId = selActividad.value||null;
-  const a=DB.actividades.find(x=>x.id===actActivaId);
-  panelEscaneo.style.display = a?'block':'none';
-  tarjetaPresentes.style.display = a?'block':'none';
-  infoActividadSel.innerHTML = a ? `${a.tipo} · ${a.hIni}–${a.hFin} · máx. <b>${a.horas} hs</b> acreditables${a.lugar?' · '+esc(a.lugar):''}` : 'Creá una actividad en la pestaña Actividades para comenzar.';
-  renderPresentes();
+function crearSesion(){
+  const cl=DB.clases.find(c=>c.id===claseActId);
+  const s={id:uid(), claseId:claseActId, fecha:sFecha.value||hoyISO(), hIni:sHIni.value||cl.hIni, hFin:sHFin.value||cl.hFin,
+    tema:sTema.value.trim(), estado:'abierta', cerradaEn:null};
+  DB.sesiones.push(s); sesionActId=s.id;
+  guardar(); cerrarModal(); cambiarClase();
 }
 function setModoRegistro(m){
   modoRegistro=m;
   btnModoEnt.classList.toggle('act', m==='entrada');
   btnModoSal.classList.toggle('act', m==='salida');
 }
-function renderPresentes(){
-  if(!actActivaId){ listaPresentes.innerHTML=''; return; }
-  const enCurso=DB.registros.filter(r=>r.actId===actActivaId && r.estado==='EN_CURSO');
-  cntPresentes.textContent = enCurso.length + ' en curso';
-  listaPresentes.innerHTML = enCurso.length ? enCurso.map(r=>{
-    const al=DB.alumnos.find(x=>x.id===r.alumnoId)||{nombre:'?',legajo:'?'};
-    return `<div class="item"><div class="cuerpo"><div class="l1">${esc(al.nombre)}</div><div class="l2">Entrada ${fmtHoraTS(r.entrada)}</div></div></div>`;
-  }).join('') : `<div class="vacio">Nadie registró entrada todavía.</div>`;
+function renderNomina(){
+  const s=DB.sesiones.find(x=>x.id===sesionActId);
+  if(!s){ listaNomina.innerHTML=''; kpisSesion.innerHTML=''; return; }
+  const nomina=DB.alumnos.filter(a=>a.claseId===claseActId).sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
+  const regs=DB.registros.filter(r=>r.sesionId===sesionActId);
+  const pres=regs.filter(r=>r.estado==='EN_CURSO'||r.estado==='PRESENTE'||r.estado==='TARDE'||r.estado==='RETIRADO').length;
+  const tarde=regs.filter(r=>r.estado==='TARDE').length;
+  kpisSesion.innerHTML=`
+    <div class="kpi"><div class="num">${nomina.length}</div><div class="lbl">Nómina</div></div>
+    <div class="kpi"><div class="num" style="color:var(--verde)">${pres}</div><div class="lbl">Presentes</div></div>
+    <div class="kpi"><div class="num" style="color:var(--amarillo)">${tarde}</div><div class="lbl">Tarde</div></div>`;
+  listaNomina.innerHTML = nomina.length ? nomina.map(a=>{
+    const r=regs.find(x=>x.alumnoId===a.id);
+    const est=r?r.estado:'AUSENTE';
+    const av=a.foto?`<img class="avatar" src="${a.foto}">`:`<div class="avatar-ph">${iniciales(a.nombre)}</div>`;
+    const chip=`<span class="chip ${est.toLowerCase().replace('_','')==='encurso'?'encurso':est.toLowerCase()}">${est.replace('_',' ')}</span>`;
+    const detalle = r ? (r.entrada?`Ent. ${fmtHoraTS(r.entrada)}${r.salida?' · Sal. '+fmtHoraTS(r.salida):''}`:'Sin horario') : 'Sin registro';
+    const obsTxt = r&&r.obs ? `<div style="font-size:11px;color:#2A5B9E">📝 ${esc(r.obs)}</div>` : '';
+    return `<div class="item">${av}<div class="cuerpo" onclick="editarRegistro('${a.id}')">
+      <div class="l1">${esc(a.nombre)} ${chip}</div><div class="l2">${etDoc(a)} ${esc(a.doc)} · ${detalle}</div>${obsTxt}</div>
+      ${s.estado==='abierta'&&!r?`<button class="btn mini sec" onclick="event.stopPropagation();marcarManual('${a.id}','entrada')">Entrada</button>`:''}
+      ${s.estado==='abierta'&&r&&r.entrada&&!r.salida?`<button class="btn mini sec" onclick="event.stopPropagation();marcarManual('${a.id}','salida')">Salida</button>`:''}
+    </div>`;
+  }).join('') : `<div class="vacio">La nómina de esta materia está vacía.</div>`;
+}
+/* Editor de registro manual: estado, horario y observación (funciona en sesión abierta o cerrada) */
+const ESTADOS_REG=[['PRESENTE','Presente'],['TARDE','Tarde'],['RETIRADO','Se retiró antes'],['AUSENTE','Ausente'],['JUSTIFICADA','Ausencia justificada']];
+function editarRegistro(alumnoId){
+  const s=DB.sesiones.find(x=>x.id===sesionActId); if(!s) return;
+  const a=DB.alumnos.find(x=>x.id===alumnoId); if(!a) return;
+  const cl=DB.clases.find(c=>c.id===s.claseId)||{};
+  const r=DB.registros.find(x=>x.sesionId===sesionActId && x.alumnoId===alumnoId);
+  const est=r?r.estado:'PRESENTE';
+  const horaEnt=r&&r.entrada?new Date(r.entrada).toTimeString().slice(0,5):s.hIni;
+  const horaSal=r&&r.salida?new Date(r.salida).toTimeString().slice(0,5):'';
+  abrirModal(`
+    <h3>${esc(a.nombre)}</h3>
+    <p class="sub">${esc(cl.nombre||'')} · ${fmtFecha(s.fecha)}${s.estado==='cerrada'?' · <b>sesión cerrada</b>':''}</p>
+    <label>Estado de asistencia</label>
+    <select id="rEstado" onchange="ajustarHorasRegistro()">${ESTADOS_REG.map(([v,t])=>`<option value="${v}" ${est===v?'selected':''}>${t}</option>`).join('')}</select>
+    <div id="rHoras" class="fila">
+      <div><label>Entrada</label><input id="rEnt" type="time" value="${horaEnt}"></div>
+      <div><label>Salida</label><input id="rSal" type="time" value="${horaSal}"></div>
+    </div>
+    <label>Observación / justificación</label>
+    <textarea id="rObs" rows="2" placeholder="Ej.: Presentó certificado médico por reposo.">${r&&r.obs?esc(r.obs):''}</textarea>
+    <div class="fila" style="margin-top:16px">
+      <button class="btn sec" onclick="cerrarModal()">Cancelar</button>
+      <button class="btn" onclick="guardarRegistro('${alumnoId}')">Guardar</button>
+    </div>
+    ${r?`<button class="btn peligro" style="margin-top:8px" onclick="borrarRegistro('${r.id}')">Borrar registro</button>`:''}
+  `);
+  ajustarHorasRegistro();
+}
+function ajustarHorasRegistro(){
+  const est=document.getElementById('rEstado').value;
+  const wrap=document.getElementById('rHoras');
+  if(wrap) wrap.style.display = (est==='AUSENTE'||est==='JUSTIFICADA')?'none':'flex';
+}
+function guardarRegistro(alumnoId){
+  const s=DB.sesiones.find(x=>x.id===sesionActId);
+  const est=document.getElementById('rEstado').value;
+  const obs=document.getElementById('rObs').value.trim();
+  let entrada=null, salida=null, minutos=0;
+  if(est!=='AUSENTE' && est!=='JUSTIFICADA'){
+    const base=new Date(s.fecha+'T00:00:00').getTime();
+    const he=document.getElementById('rEnt').value, hs=document.getElementById('rSal').value;
+    if(he){ const [h,m]=he.split(':').map(Number); entrada=base+(h*60+m)*60000; }
+    if(hs){ const [h,m]=hs.split(':').map(Number); salida=base+(h*60+m)*60000; }
+    if(entrada && salida){ if(salida<entrada) salida=entrada; minutos=Math.round((salida-entrada)/60000); }
+  }
+  let r=DB.registros.find(x=>x.sesionId===sesionActId && x.alumnoId===alumnoId);
+  if(r){ r.estado=est; r.entrada=entrada; r.salida=salida; r.minutos=minutos; r.obs=obs; }
+  else DB.registros.push({id:uid(), sesionId:sesionActId, alumnoId, entrada, salida, estado:est, minutos, obs});
+  guardar(); cerrarModal(); renderNomina();
+}
+function borrarRegistro(id){
+  if(!confirm('¿Borrar el registro de este alumno en esta sesión?')) return;
+  DB.registros=DB.registros.filter(r=>r.id!==id);
+  guardar(); cerrarModal(); renderNomina();
+}
+function marcarManual(alumnoId, modo){
+  const a=DB.alumnos.find(x=>x.id===alumnoId);
+  if(a) procesarDoc(a.doc, 'registro', modo, a.tipoDoc);
+}
+function marcarTodosPresente(){
+  const s=DB.sesiones.find(x=>x.id===sesionActId);
+  if(!s||s.estado!=='abierta'){ alert('La sesión no está abierta.'); return; }
+  if(!confirm('¿Marcar ENTRADA a todos los alumnos sin registro?')) return;
+  const ahora=Date.now();
+  DB.alumnos.filter(a=>a.claseId===claseActId).forEach(a=>{
+    if(!DB.registros.some(r=>r.sesionId===sesionActId && r.alumnoId===a.id))
+      DB.registros.push({id:uid(), sesionId:sesionActId, alumnoId:a.id, entrada:ahora, salida:null, estado:estadoPorHora(ahora,s), minutos:0});
+  });
+  guardar(); renderNomina();
 }
 
 /* ---------- Procesamiento de un escaneo ---------- */
-function procesarLegajo(legajo, contexto){
-  legajo=String(legajo).trim(); if(!legajo) return;
-  const modo = contexto==='barrido' ? 'salida' : modoRegistro;
-  const actId = contexto==='barrido' ? actCierreId : actActivaId;
-  const act=DB.actividades.find(a=>a.id===actId);
-  if(!act){ mostrarResultado('err','No hay actividad seleccionada.',contexto); return; }
-  const al=DB.alumnos.find(a=>a.legajo===legajo);
-  if(!al){ mostrarResultado('err',`Legajo ${legajo} no está en el padrón.`,contexto); return; }
-  const reg=DB.registros.find(r=>r.actId===actId && r.alumnoId===al.id);
+function estadoPorHora(ts, s){
+  const base=new Date(s.fecha+'T00:00:00').getTime();
+  const [h,m]=s.hIni.split(':').map(Number);
+  const inicio=base+(h*60+m)*60000;
+  return ts <= inicio + DB.config.toleranciaMin*60000 ? 'PRESENTE' : 'TARDE';
+}
+function procesarDoc(doc, contexto, modoForzado, tipoDocHint){
+  doc=String(doc).trim(); if(!doc) return;
+  const modo = modoForzado || modoRegistro;
+  const s=DB.sesiones.find(x=>x.id===sesionActId);
+  if(!s){ mostrarResultado('err','No hay sesión seleccionada.',contexto); return; }
+  if(s.estado!=='abierta'){ mostrarResultado('err','La sesión está cerrada.',contexto); return; }
+  const a=DB.alumnos.find(x=>x.claseId===claseActId && String(x.doc)===doc && (!tipoDocHint||x.tipoDoc===tipoDocHint))
+        || DB.alumnos.find(x=>x.claseId===claseActId && String(x.doc)===doc);
+  if(!a){ mostrarResultado('err',`Documento ${doc} no está en la nómina de esta materia.`,contexto); return; }
+  const reg=DB.registros.find(r=>r.sesionId===sesionActId && r.alumnoId===a.id);
   const ahora=Date.now();
   if(modo==='entrada'){
-    if(reg){ mostrarResultado('info',`${al.nombre}: ya tiene entrada (${fmtHoraTS(reg.entrada)}).`,contexto,al.foto); return; }
-    DB.registros.push({id:uid(), actId, alumnoId:al.id, entrada:ahora, salida:null, estado:'EN_CURSO', minutos:0, audit:null});
-    guardar(); mostrarResultado('ok',`▶ ENTRADA · ${al.nombre} · ${fmtHoraTS(ahora)}`,contexto,al.foto);
+    if(reg){ mostrarResultado('info',`${a.nombre}: ya registró entrada (${fmtHoraTS(reg.entrada)}).`,contexto,a.foto); return; }
+    const est=estadoPorHora(ahora,s);
+    DB.registros.push({id:uid(), sesionId:sesionActId, alumnoId:a.id, entrada:ahora, salida:null, estado:est, minutos:0});
+    guardar(); mostrarResultado(est==='TARDE'?'info':'ok',`▶ ${est} · ${a.nombre} · ${fmtHoraTS(ahora)}`,contexto,a.foto);
   } else {
-    if(!reg){ mostrarResultado('err',`${al.nombre}: no tiene entrada registrada.`,contexto,al.foto); return; }
-    if(reg.salida){ mostrarResultado('info',`${al.nombre}: la salida ya fue registrada (${fmtHoraTS(reg.salida)}).`,contexto,al.foto); return; }
-    reg.salida=ahora; reg.estado='COMPLETO'; reg.minutos=calcularMinutos(reg,act);
-    guardar(); mostrarResultado('ok',`◀ SALIDA · ${al.nombre} · ${fmtHs(reg.minutos)} acreditadas`,contexto,al.foto);
+    if(!reg){ mostrarResultado('err',`${a.nombre}: no tiene entrada registrada.`,contexto,a.foto); return; }
+    if(reg.salida){ mostrarResultado('info',`${a.nombre}: la salida ya fue registrada.`,contexto,a.foto); return; }
+    reg.salida=ahora; reg.minutos=calcularMinutos(reg);
+    if(reg.estado==='EN_CURSO'||reg.estado==='PRESENTE') reg.estado='PRESENTE';
+    if(reg.estado==='TARDE') reg.estado='TARDE';
+    guardar(); mostrarResultado('ok',`◀ SALIDA · ${a.nombre} · ${fmtHs(reg.minutos)}`,contexto,a.foto);
   }
-  renderPresentes();
-  if(contexto==='barrido') renderListaBarrido();
+  renderNomina();
 }
 function mostrarResultado(tipo,msj,contexto,foto){
-  const el = contexto==='barrido' ? document.getElementById('resBarrido') : resScan;
-  if(!el) return;
+  const el=resScan; if(!el) return;
   el.className='resultado-scan '+tipo; el.style.display='block';
-  if(foto){
-    el.innerHTML=`<div style="display:flex;align-items:center;gap:10px;text-align:left"><img class="scan-foto" src="${foto}"><span>${esc(msj)}</span></div>`;
-  } else el.textContent=msj;
+  if(foto) el.innerHTML=`<div style="display:flex;align-items:center;gap:10px;text-align:left"><img class="scan-foto" src="${foto}"><span>${esc(msj)}</span></div>`;
+  else el.textContent=msj;
   if(navigator.vibrate) navigator.vibrate(tipo==='ok'?60:[60,60,60]);
-  if(typeof beepScan==='function') beepScan(tipo);
+  beepScan(tipo);
   clearTimeout(el._t); el._t=setTimeout(()=>{el.style.display='none';},3500);
+}
+function beepScan(tipo){
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+    beepScan.ctx=beepScan.ctx||new AC();
+    const ctx=beepScan.ctx,o=ctx.createOscillator(),g=ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.frequency.value = tipo==='ok'?1050:(tipo==='info'?650:260);
+    g.gain.setValueAtTime(0.15,ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.18);
+    o.start(); o.stop(ctx.currentTime+0.2);
+  }catch(e){}
 }
 
 /* ---------- Cámara (BarcodeDetector) ---------- */
 let streamCam=null, loopScan=null, ultimoScan={val:'',ts:0};
-async function toggleCamara(){ streamCam ? detenerCamara() : iniciarCamara(videoScan, btnCamara, 'registro'); }
-async function iniciarCamara(video, boton, contexto){
-  if(!('BarcodeDetector' in window)){ mostrarResultado('err','Este navegador no soporta detección de códigos. Usá el lector USB o el ingreso manual.',contexto); return; }
+async function toggleCamara(){ streamCam?detenerCamara():iniciarCamara(); }
+async function iniciarCamara(){
+  if(!('BarcodeDetector' in window)){ mostrarResultado('err','Este navegador no detecta códigos con la cámara. Usá el lector USB o el ingreso manual.','registro'); return; }
   try{
-    streamCam = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
-    video.srcObject=streamCam; video.style.display='block'; await video.play();
-    boton.textContent='⏹ Detener cámara';
+    streamCam=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+    videoScan.srcObject=streamCam; videoScan.style.display='block'; await videoScan.play();
+    btnCamara.textContent='⏹ Detener cámara';
     const det=new BarcodeDetector({formats:['code_128','qr_code']});
     loopScan=setInterval(async ()=>{
-      try{
-        const codes=await det.detect(video);
-        if(codes.length){
-          let v=codes[0].rawValue;
-          if(v.startsWith('ASISTQR|')) v=v.split('|')[1]||v;   // compatibilidad con carnets QR anteriores
+      try{ const codes=await det.detect(videoScan);
+        if(codes.length){ let v=codes[0].rawValue;
+          if(v.startsWith('ASISTQR|')) v=v.split('|')[1]||v;
           const ahora=Date.now();
-          if(v===ultimoScan.val && ahora-ultimoScan.ts<4000) return; // anti-doble lectura
-          ultimoScan={val:v,ts:ahora};
-          procesarLegajo(v, contexto);
+          if(v===ultimoScan.val && ahora-ultimoScan.ts<4000) return;
+          ultimoScan={val:v,ts:ahora}; procesarDoc(v,'registro');
         }
       }catch(e){}
-    }, 400);
-  }catch(e){ mostrarResultado('err','No se pudo acceder a la cámara: '+e.message,contexto); }
+    },400);
+  }catch(e){ mostrarResultado('err','No se pudo acceder a la cámara: '+e.message,'registro'); }
 }
 function detenerCamara(){
   if(loopScan){clearInterval(loopScan);loopScan=null;}
   if(streamCam){streamCam.getTracks().forEach(t=>t.stop());streamCam=null;}
-  videoScan.style.display='none'; videoScan.srcObject=null;
-  btnCamara.textContent='📷 Activar cámara';
+  if(typeof videoScan!=='undefined' && videoScan){ videoScan.style.display='none'; videoScan.srcObject=null; }
+  if(typeof btnCamara!=='undefined' && btnCamara) btnCamara.textContent='📷 Activar cámara';
 }
 
-/* ---------- Cierre de actividad con barrido de salida ---------- */
-let actCierreId=null;
-function iniciarCierre(id){
-  actCierreId=id;
-  const a=DB.actividades.find(x=>x.id===id);
-  abrirModal(`
-    <h3>⏹ Cierre — ${esc(a.nombre)}</h3>
-    <p class="sub"><b>Barrido de salida:</b> antes de finalizar, pasá los carnets de los alumnos <u>presentes</u> que se retiran ahora. Quien ya se retiró sin registrar salida quedará <b>PENDIENTE con 0 horas</b>, regularizable solo con justificación.</p>
-    <video id="videoBarrido" playsinline muted style="display:none;width:100%;border-radius:8px;background:#000;max-height:280px;object-fit:cover"></video>
-    <button class="btn ambar" id="btnCamBarrido" onclick="toggleCamaraBarrido()">📷 Activar cámara para barrido</button>
-    <label>Ingreso manual (legajo + Enter)</label>
-    <input id="inputBarrido" autocomplete="off" placeholder="Escribir legajo…">
-    <div style="font-size:12px;color:var(--gris);margin-top:6px">🔌 Con lector USB: escaneá directamente, sin tocar la pantalla.</div>
-    <div id="resBarrido" class="resultado-scan" style="display:none"></div>
-    <div id="listaBarrido" style="margin-top:10px"></div>
-    <hr class="sep">
-    <button class="btn peligro" onclick="confirmarCierre()">Finalizar cierre de la actividad</button>
-    <button class="btn sec" style="margin-top:8px" onclick="cerrarModal();verActividad('${id}')">Cancelar</button>
-  `);
-  const inp=document.getElementById('inputBarrido');
-  inp.addEventListener('keydown', e=>{ if(e.key==='Enter'){ procesarLegajo(inp.value,'barrido'); inp.value=''; }});
-  renderListaBarrido();
-}
-function renderListaBarrido(){
-  const cont=document.getElementById('listaBarrido'); if(!cont) return;
-  const sinSalida=DB.registros.filter(r=>r.actId===actCierreId && r.estado==='EN_CURSO');
-  cont.innerHTML = sinSalida.length
-    ? `<div class="aviso">⚠ ${sinSalida.length} alumno(s) aún sin salida:</div>` + sinSalida.map(r=>{
-        const al=DB.alumnos.find(x=>x.id===r.alumnoId)||{nombre:'?'};
-        return `<div class="item"><div class="cuerpo"><div class="l1">${esc(al.nombre)}</div><div class="l2">Entrada ${fmtHoraTS(r.entrada)}</div></div></div>`;
-      }).join('')
-    : `<div class="resultado-scan ok" style="display:block">✔ Todos los registros tienen salida.</div>`;
-}
-let streamBarrido=null, loopBarrido=null;
-async function toggleCamaraBarrido(){
-  const video=document.getElementById('videoBarrido'), boton=document.getElementById('btnCamBarrido');
-  if(streamBarrido){ detenerCamaraBarrido(); return; }
-  if(!('BarcodeDetector' in window)){ mostrarResultado('err','Sin soporte de cámara para códigos; usá lector USB o manual.','barrido'); return; }
-  try{
-    streamBarrido=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
-    video.srcObject=streamBarrido; video.style.display='block'; await video.play();
-    boton.textContent='⏹ Detener cámara';
-    const det=new BarcodeDetector({formats:['code_128','qr_code']});
-    loopBarrido=setInterval(async ()=>{
-      try{
-        const codes=await det.detect(video);
-        if(codes.length){
-          let v=codes[0].rawValue; if(v.startsWith('ASISTQR|')) v=v.split('|')[1]||v;
-          const ahora=Date.now();
-          if(v===ultimoScan.val && ahora-ultimoScan.ts<4000) return;
-          ultimoScan={val:v,ts:ahora}; procesarLegajo(v,'barrido');
-        }
-      }catch(e){}
-    },400);
-  }catch(e){ mostrarResultado('err','No se pudo acceder a la cámara: '+e.message,'barrido'); }
-}
-function detenerCamaraBarrido(){
-  if(loopBarrido){clearInterval(loopBarrido);loopBarrido=null;}
-  if(streamBarrido){streamBarrido.getTracks().forEach(t=>t.stop());streamBarrido=null;}
-  const v=document.getElementById('videoBarrido'); if(v){v.style.display='none';v.srcObject=null;}
-  const b=document.getElementById('btnCamBarrido'); if(b) b.textContent='📷 Activar cámara para barrido';
-}
-function confirmarCierre(){
-  const sinSalida=DB.registros.filter(r=>r.actId===actCierreId && r.estado==='EN_CURSO');
-  if(sinSalida.length && !confirm(`${sinSalida.length} alumno(s) quedarán PENDIENTES con 0 horas. ¿Confirmás el cierre?`)) return;
-  const a=DB.actividades.find(x=>x.id===actCierreId);
-  sinSalida.forEach(r=>{ r.estado='PENDIENTE'; r.minutos=0; });
-  a.estado='cerrada'; a.cerradaEn=Date.now();
-  guardar(); detenerCamaraBarrido(); cerrarModal();
-  descargarBackup(true, a.id);          // respaldo automático al cierre
-  renderActividades(); renderRegistro();
-  setTimeout(()=>{ if(confirm('Actividad cerrada y respaldo descargado.\n¿Compartir el respaldo a Google Drive ahora?')) compartirBackup(a.id); }, 400);
+/* ---------- Lector USB: captura global por ráfaga ---------- */
+let bufUSB=[];
+function registrarTecla(key, ts){
+  const el=document.activeElement;
+  if(el && ['INPUT','TEXTAREA','SELECT'].includes(el.tagName)){ bufUSB=[]; return; }
+  if(key==='Enter'){
+    if(bufUSB.length>=3){
+      const dur=ts-bufUSB[0].ts;
+      if(dur<bufUSB.length*60){
+        let val=bufUSB.map(b=>b.k).join('');
+        if(val.startsWith('ASISTQR|')) val=val.split('|')[1]||val;
+        if(document.getElementById('v-tomar').classList.contains('act')) procesarDoc(val,'registro');
+      }
+    }
+    bufUSB=[]; return;
+  }
+  if(key && key.length===1){
+    if(bufUSB.length && ts-bufUSB[bufUSB.length-1].ts>300) bufUSB=[];
+    bufUSB.push({k:key,ts});
+  }
 }
 
-/* ---------- Regularización de pendientes (auditada) ---------- */
-function abrirRegularizar(regId){
-  const r=DB.registros.find(x=>x.id===regId);
-  const al=DB.alumnos.find(x=>x.id===r.alumnoId)||{nombre:'?'};
-  const act=DB.actividades.find(x=>x.id===r.actId);
-  abrirModal(`
-    <h3>Regularizar registro pendiente</h3>
-    <p class="sub"><b>${esc(al.nombre)}</b> — ${esc(act.nombre)}<br>Entrada ${fmtHoraTS(r.entrada)} · sin salida registrada.</p>
-    <label>Horas a acreditar (máx. ${act.horas})</label>
-    <input id="mRegHoras" type="number" step="0.25" min="0" max="${act.horas}" value="0">
-    <label>Justificación (obligatoria)</label>
-    <textarea id="mRegMotivo" rows="3" placeholder="Ej.: El alumno permaneció hasta el final; se verificó presencia en el acto de cierre."></textarea>
-    <label>Regularizado por</label><input id="mRegPor" value="${esc(DB.config.resp)}">
-    <div class="fila" style="margin-top:16px">
-      <button class="btn sec" onclick="cerrarModal();verActividad('${act.id}')">Cancelar</button>
-      <button class="btn" onclick="guardarRegularizacion('${regId}')">Acreditar</button>
-    </div>
-  `);
-}
-function guardarRegularizacion(regId){
-  const r=DB.registros.find(x=>x.id===regId);
-  const act=DB.actividades.find(x=>x.id===r.actId);
-  const hs=parseFloat(mRegHoras.value), motivo=mRegMotivo.value.trim(), por=mRegPor.value.trim();
-  if(isNaN(hs)||hs<0||hs>act.horas){ alert('Horas fuera de rango.'); return; }
-  if(!motivo||!por){ alert('La justificación y el responsable son obligatorios.'); return; }
-  r.minutos=Math.round(hs*60); r.estado='REGULARIZADO';
-  r.audit={por, fecha:Date.now(), motivo};
-  guardar(); cerrarModal(); verActividad(act.id);
+/* ---------- Cierre de sesión ---------- */
+function cerrarSesionActual(){
+  const s=DB.sesiones.find(x=>x.id===sesionActId);
+  if(!s){ return; }
+  if(s.estado==='cerrada'){ alert('La sesión ya está cerrada.'); return; }
+  const sinReg=DB.alumnos.filter(a=>a.claseId===claseActId).filter(a=>!DB.registros.some(r=>r.sesionId===sesionActId && r.alumnoId===a.id));
+  if(!confirm(`Al cerrar la sesión, los ${sinReg.length} alumno(s) sin registro quedarán como AUSENTES y se contabilizará la asistencia.\n¿Cerrar la sesión?`)) return;
+  const ahora=Date.now();
+  // Alumnos sin registro => AUSENTE explícito
+  sinReg.forEach(a=>DB.registros.push({id:uid(), sesionId:sesionActId, alumnoId:a.id, entrada:null, salida:null, estado:'AUSENTE', minutos:0}));
+  // Presentes sin salida registrada quedan como PRESENTE/TARDE (con salida a hora fin)
+  const base=new Date(s.fecha+'T00:00:00').getTime();
+  const [hf,mf]=s.hFin.split(':').map(Number); const tFin=base+(hf*60+mf)*60000;
+  DB.registros.filter(r=>r.sesionId===sesionActId && r.entrada && !r.salida).forEach(r=>{
+    r.salida=tFin; r.minutos=calcularMinutos(r);
+  });
+  s.estado='cerrada'; s.cerradaEn=ahora;
+  guardar(); descargarBackup(true, s.id); cambiarClase();
+  setTimeout(()=>{ if(confirm('Sesión cerrada y respaldo descargado.\n¿Compartir el respaldo a Google Drive?')) compartirBackup(s.id); },400);
 }
 /* ================================================================
-   Informes, constancias, respaldo (descarga + compartir) e inicio
+   Carnet virtual (canvas), informes, respaldo, padrón compartido
 ================================================================ */
-function semaforo(min){
-  const pct = min/(DB.config.metaHoras*60)*100;
-  return pct>=100?'v':(pct>=50?'a':'r');
-}
 
-function renderInforme(){
-  const tipo=tipoInforme.value;
-  if(tipo==='actividad'){
-    filtrosInforme.innerHTML=`<label>Actividad</label><select id="fAct" onchange="renderInforme()">${
-      DB.actividades.slice().sort((a,b)=>(b.fecha).localeCompare(a.fecha)).map(a=>`<option value="${a.id}">${esc(a.nombre)} — ${fmtFecha(a.fecha)}</option>`).join('')||'<option value="">(sin actividades)</option>'}</select>`;
-    const prev=document.getElementById('fAct');
-    informeActividad(prev&&prev.value);
-  } else if(tipo==='alumno'){
-    filtrosInforme.innerHTML='';
-    informeAlumnos();
-  } else {
-    filtrosInforme.innerHTML=`<div class="fila">
-      <div><label>Desde</label><input id="fDesde" type="date" onchange="renderInforme()"></div>
-      <div><label>Hasta</label><input id="fHasta" type="date" onchange="renderInforme()"></div></div>
-      <label>Proyecto (opcional)</label><input id="fProy" placeholder="Filtrar por proyecto…" oninput="renderInforme()">`;
-    informePeriodo();
-  }
-}
+/* ---------- Carnet virtual: canvas 1012×638 (proporción CR80) ---------- */
+const CW=1012, CH=638;
+function ajustarTexto(x, t, max){ let s=t; while(x.measureText(s).width>max && s.length>3) s=s.slice(0,-1); return s===t?s:s.slice(0,-1)+'…'; }
+function renderCarnetCanvas(al){
+  return new Promise(resolve=>{
+    const cv=document.createElement('canvas'); cv.width=CW; cv.height=CH;
+    const x=cv.getContext('2d'); const c=DB.config;
+    const cl=DB.clases.find(k=>k.id===al.claseId)||{};
+    x.fillStyle='#FFFFFF'; x.fillRect(0,0,CW,CH);
+    const g=x.createLinearGradient(0,0,CW,0); g.addColorStop(0,'#1B3A6B'); g.addColorStop(1,'#122A50');
+    x.fillStyle=g; x.fillRect(0,0,CW,150);
+    x.fillStyle='#FDF3DC'; x.fillRect(0,CH-56,CW,56);
+    x.fillStyle='#9A6B00'; x.font='700 24px system-ui,sans-serif'; x.textAlign='center';
+    x.fillText('CREDENCIAL DE ALUMNO', CW/2, CH-19);
+    x.strokeStyle='#1B3A6B'; x.lineWidth=4; x.strokeRect(2,2,CW-4,CH-4);
 
-function informeActividad(actId){
-  const a=DB.actividades.find(x=>x.id===actId);
-  if(!a){ cuerpoInforme.innerHTML=`<div class="tarjeta"><div class="vacio">Sin actividades para informar.</div></div>`; return; }
-  const regs=DB.registros.filter(r=>r.actId===actId);
-  const totalMin=regs.reduce((s,r)=>s+(r.minutos||0),0);
-  // Enriquecer con datos del alumno y ordenar: carrera (alfabético) → nombre (alfabético)
-  const filasDatos = regs.map(r=>({r, al:DB.alumnos.find(x=>x.id===r.alumnoId)||{nombre:'(baja)',carrera:''}}))
-    .sort((x,y)=>{
-      const cx=x.al.carrera||'', cy=y.al.carrera||'';
-      if(!cx && cy) return 1;              // sin carrera → al final
-      if(cx && !cy) return -1;
-      return cx.localeCompare(cy,'es') || x.al.nombre.localeCompare(y.al.nombre,'es');
-    });
-  let cuerpoTabla='', carreraPrev=null;
-  filasDatos.forEach(({r,al})=>{
-    const car = al.carrera || 'Sin carrera asignada';
-    if(car!==carreraPrev){
-      const n=filasDatos.filter(f=>(f.al.carrera||'Sin carrera asignada')===car).length;
-      cuerpoTabla+=`<tr><td colspan="5" style="background:var(--ambar-cl);font-weight:800;color:var(--amarillo)">${esc(car)} (${n})</td></tr>`;
-      carreraPrev=car;
-    }
-    cuerpoTabla+=`<tr><td>${esc(al.nombre)}</td><td>${fmtHoraTS(r.entrada)}</td><td>${fmtHoraTS(r.salida)}</td><td><b>${fmtHs(r.minutos||0)}</b></td><td>${r.estado.replace('_',' ')}</td></tr>`;
+    const dibujar=(logoOK)=>{
+      const tx0=logoOK?186:36; x.textAlign='left';
+      x.fillStyle='#FFFFFF'; x.font='800 32px system-ui,sans-serif';
+      x.fillText(ajustarTexto(x,c.uni,CW-tx0-30), tx0, 56);
+      x.font='400 24px system-ui,sans-serif'; x.fillStyle='rgba(255,255,255,.92)';
+      x.fillText(ajustarTexto(x,c.fac,CW-tx0-30), tx0, 92);
+      x.fillText(ajustarTexto(x,c.filial,CW-tx0-30), tx0, 124);
+
+      const fx=44, fy=176, fw=330, fh=400, dx=fx+fw+34, anchoDatos=CW-dx-36;
+      x.fillStyle='#1A2433'; x.font='800 44px system-ui,sans-serif';
+      const nombre=al.nombre;
+      if(x.measureText(nombre).width>anchoDatos && nombre.includes(',')){
+        const [ape,...resto]=nombre.split(',');
+        x.fillText(ajustarTexto(x,ape.trim()+',',anchoDatos), dx, 246);
+        x.fillText(ajustarTexto(x,resto.join(',').trim(),anchoDatos), dx, 300);
+      } else x.fillText(ajustarTexto(x,nombre,anchoDatos), dx, 262);
+      x.font='400 28px system-ui,sans-serif'; x.fillStyle='#5B6676';
+      x.fillText(ajustarTexto(x, cl.nombre?cl.nombre+(cl.curso?' · '+cl.curso:''):(al.carrera||'Alumno'), anchoDatos), dx, 348);
+      x.font='700 30px system-ui,sans-serif'; x.fillStyle='#1B3A6B';
+      x.fillText(etDoc(al)+' '+al.doc, dx, 396);
+      try{
+        const cvB=document.createElement('canvas');
+        JsBarcode(cvB, String(al.doc), {format:'CODE128', height:64, width:3, fontSize:24, margin:8, displayValue:true});
+        const bw=Math.min(cvB.width, CW-dx-46);
+        x.drawImage(cvB, dx, 428, bw, cvB.height*(bw/cvB.width));
+      }catch(e){ x.font='400 22px system-ui,sans-serif'; x.fillStyle='#B3261E'; x.fillText('Código no disponible (sin conexión)', dx, 468); }
+
+      const marco=()=>{ x.strokeStyle='#DDE2EA'; x.lineWidth=3; x.strokeRect(fx,fy,fw,fh); };
+      if(al.foto){
+        const im=new Image();
+        im.onload=()=>{ const k=Math.max(fw/im.width,fh/im.height), sw=fw/k, sh=fh/k, sx=(im.width-sw)/2, sy=(im.height-sh)/2;
+          x.save(); x.beginPath(); x.rect(fx,fy,fw,fh); x.clip(); x.drawImage(im,sx,sy,sw,sh,fx,fy,fw,fh); x.restore(); marco(); resolve(cv); };
+        im.onerror=()=>{ ph(); resolve(cv); }; im.src=al.foto;
+      } else { ph(); resolve(cv); }
+      function ph(){ x.fillStyle='#F0F2F6'; x.fillRect(fx,fy,fw,fh); marco();
+        x.fillStyle='#9AA3B2'; x.font='400 150px system-ui,sans-serif'; x.textAlign='center'; x.fillText('👤',fx+fw/2,fy+fh/2+54); x.textAlign='left'; }
+    };
+    if(c.logo){ const lg=new Image();
+      lg.onload=()=>{ x.fillStyle='#FFFFFF'; x.beginPath(); if(x.roundRect) x.roundRect(30,18,128,128,14); else x.rect(30,18,128,128); x.fill();
+        const k=Math.min(114/lg.width,114/lg.height); x.drawImage(lg,30+(128-lg.width*k)/2,18+(128-lg.height*k)/2,lg.width*k,lg.height*k); dibujar(true); };
+      lg.onerror=()=>dibujar(false); lg.src=c.logo;
+    } else dibujar(false);
   });
-  cuerpoInforme.innerHTML=`<div class="tarjeta">
-    <h3>${esc(a.nombre)}</h3>
-    <div style="font-size:13px;color:var(--gris);margin-bottom:8px">${a.tipo} · ${fmtFecha(a.fecha)} · ${a.hIni}–${a.hFin}${a.lugar?' · '+esc(a.lugar):''}${a.responsable?' · Resp.: '+esc(a.responsable):''}</div>
-    <div class="kpis"><div class="kpi"><div class="num">${regs.length}</div><div class="lbl">Asistentes</div></div>
-    <div class="kpi"><div class="num">${fmtHs(totalMin)}</div><div class="lbl">Horas totales</div></div>
-    <div class="kpi"><div class="num">${regs.filter(r=>r.estado==='PENDIENTE').length}</div><div class="lbl">Pendientes</div></div></div>
-    <div class="tabla-scroll"><table class="rep"><tr><th>Alumno</th><th>Entrada</th><th>Salida</th><th>Horas</th><th>Estado</th></tr>
-    ${cuerpoTabla||'<tr><td colspan="5">Sin registros</td></tr>'}
-    </table></div></div>`;
 }
-
-function informeAlumnos(){
-  const meta=DB.config.metaHoras*60;
-  const lista=DB.alumnos.slice().sort((a,b)=>horasAcumuladas(b.id)-horasAcumuladas(a.id));
-  cuerpoInforme.innerHTML=`<div class="tarjeta"><h3>Avance hacia la meta de ${DB.config.metaHoras} horas</h3>${
-    lista.length? lista.map(a=>{
-      const min=horasAcumuladas(a.id), pct=Math.min(100, Math.round(min/meta*100));
-      return `<div class="item" onclick="verConstancia('${a.id}')"><div class="cuerpo">
-        <div class="l1"><span class="sem ${semaforo(min)}"></span>${esc(a.nombre)}</div>
-        <div class="l2">${fmtHs(min)} de ${DB.config.metaHoras} h (${pct}%)${a.carrera?' · '+esc(a.carrera):''}</div>
-        <div class="barra"><div style="width:${pct}%"></div></div>
-      </div><button class="btn mini sec" onclick="event.stopPropagation();verConstancia('${a.id}')">Constancia</button></div>`;
-    }).join('') : '<div class="vacio">Padrón vacío.</div>'}</div>`;
+async function descargarCarnetUno(id){
+  const a=DB.alumnos.find(x=>x.id===id); if(!a) return;
+  const cv=await renderCarnetCanvas(a);
+  cv.toBlob(b=>{
+    const nom='carnet_'+String(a.nombre).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,'_');
+    bajarArchivo(b, nom+'.png');
+  },'image/png');
 }
-
-function informePeriodo(){
-  const d=document.getElementById('fDesde')?.value||'', h=document.getElementById('fHasta')?.value||'';
-  const proy=(document.getElementById('fProy')?.value||'').toLowerCase();
-  const acts=DB.actividades.filter(a=> (!d||a.fecha>=d) && (!h||a.fecha<=h) && (!proy||(a.proyecto||'').toLowerCase().includes(proy)));
-  const ids=new Set(acts.map(a=>a.id));
-  const regs=DB.registros.filter(r=>ids.has(r.actId));
-  const alumnosU=new Set(regs.map(r=>r.alumnoId));
-  const totalMin=regs.reduce((s,r)=>s+(r.minutos||0),0);
-  cuerpoInforme.innerHTML=`<div class="tarjeta">
-    <h3>Resumen del período${d||h?` (${d?fmtFecha(d):'…'} — ${h?fmtFecha(h):'…'})`:''}</h3>
-    <div class="kpis"><div class="kpi"><div class="num">${acts.length}</div><div class="lbl">Actividades</div></div>
-    <div class="kpi"><div class="num">${alumnosU.size}</div><div class="lbl">Alumnos</div></div>
-    <div class="kpi"><div class="num">${fmtHs(totalMin)}</div><div class="lbl">Horas totales</div></div></div>
-    <div class="tabla-scroll"><table class="rep"><tr><th>Actividad</th><th>Fecha</th><th>Proyecto</th><th>Asist.</th><th>Horas</th></tr>
-    ${acts.sort((a,b)=>a.fecha.localeCompare(b.fecha)).map(a=>{
-      const rs=regs.filter(r=>r.actId===a.id);
-      return `<tr><td>${esc(a.nombre)}</td><td>${fmtFecha(a.fecha)}</td><td>${esc(a.proyecto)||'—'}</td><td>${rs.length}</td><td><b>${fmtHs(rs.reduce((s,r)=>s+(r.minutos||0),0))}</b></td></tr>`;
-    }).join('')||'<tr><td colspan="5">Sin actividades en el período</td></tr>'}
-    </table></div></div>`;
+async function imprimirCarnetUno(id){
+  const a=DB.alumnos.find(x=>x.id===id); if(!a) return;
+  const cv=await renderCarnetCanvas(a);
+  const d=document.createElement('div'); const im=document.createElement('img');
+  im.src=cv.toDataURL('image/png'); im.style.width='100%'; im.style.borderRadius='10px'; im.style.border='1px solid var(--linea)';
+  d.appendChild(im); gridCarnets.innerHTML=''; gridCarnets.appendChild(d);
+  cerrarModal(); irVista('v-carnets'); marcarParaImpresion('v-carnets');
 }
-
-/* ---------- Constancia individual ---------- */
-function verConstancia(alumnoId){
-  const al=DB.alumnos.find(x=>x.id===alumnoId); if(!al) return;
-  const c=DB.config;
-  const regs=DB.registros.filter(r=>r.alumnoId===alumnoId && (r.estado==='COMPLETO'||r.estado==='REGULARIZADO'))
-    .map(r=>({r, a:DB.actividades.find(x=>x.id===r.actId)})).filter(x=>x.a)
-    .sort((x,y)=>x.a.fecha.localeCompare(y.a.fecha));
-  const total=regs.reduce((s,x)=>s+(x.r.minutos||0),0);
-  const pct=Math.min(100, Math.round(total/(c.metaHoras*60)*100));
-  cuerpoConstancia.innerHTML=`<div class="constancia">
-    <div class="enc">${c.logo?`<img src="${c.logo}">`:''}<div class="t"><b>${esc(c.uni)}</b><br>${esc(c.fac)}<br>${esc(c.filial)}</div></div>
-    <h2>Constancia de horas de extensión universitaria</h2>
-    <p style="font-size:13.5px;text-align:justify">Se deja constancia de que <b>${esc(al.nombre)}</b>, legajo N.º <b>${esc(al.legajo)}</b>${al.carrera?`, de la carrera de <b>${esc(al.carrera)}</b>`:''}, ha participado de las actividades de extensión universitaria que se detallan a continuación, acreditando un total de <b>${fmtHs(total)}</b> sobre la meta institucional de ${c.metaHoras} horas (${pct}%).</p>
-    <table class="rep"><tr><th>Fecha</th><th>Actividad</th><th>Tipo</th><th>Proyecto</th><th>Horas</th></tr>
-    ${regs.map(x=>`<tr><td>${fmtFecha(x.a.fecha)}</td><td>${esc(x.a.nombre)}${x.r.estado==='REGULARIZADO'?' *':''}</td><td>${esc(x.a.tipo)}</td><td>${esc(x.a.proyecto)||'—'}</td><td><b>${fmtHs(x.r.minutos)}</b></td></tr>`).join('')||'<tr><td colspan="5">Sin actividades acreditadas</td></tr>'}
-    <tr><td colspan="4" style="text-align:right"><b>TOTAL ACREDITADO</b></td><td><b>${fmtHs(total)}</b></td></tr></table>
-    ${regs.some(x=>x.r.estado==='REGULARIZADO')?'<p style="font-size:11px;color:var(--gris);margin-top:6px">* Registro regularizado por el responsable con justificación documentada.</p>':''}
-    <p style="font-size:12px;margin-top:14px">Expedida en ${esc(c.filial.replace('Filial ',''))}, a los ${new Date().getDate()} días del mes de ${new Date().toLocaleDateString('es-PY',{month:'long'})} de ${new Date().getFullYear()}.</p>
-    <div class="firmas"><div>${esc(c.resp)||'Responsable de Extensión'}<br>Firma y sello</div><div>Decanato / Coordinación<br>Firma y sello</div></div>
-  </div>`;
-  irVista('v-constancia'); marcarParaImpresion('v-constancia');
-}
-
-/* ---------- Respaldo: descarga y compartir ---------- */
-function armarBackup(soloActId){
-  const data = soloActId ? {
-    tipo:'actividad', config:DB.config, generado:new Date().toISOString(),
-    actividad:DB.actividades.find(a=>a.id===soloActId),
-    alumnos:DB.alumnos, registros:DB.registros.filter(r=>r.actId===soloActId)
-  } : Object.assign({tipo:'completo', generado:new Date().toISOString()}, DB);
-  const stamp=new Date().toISOString().slice(0,16).replace('T','_').replace(':','');
-  const nombre=`asistext_${soloActId?'cierre':'backup'}_${stamp}.json`;
-  return {blob:new Blob([JSON.stringify(data,null,1)],{type:'application/json'}), nombre};
-}
-function descargarBackup(silencioso, soloActId){
-  const {blob,nombre}=armarBackup(soloActId);
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=nombre;
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
-  if(!silencioso) alert(`Respaldo descargado: ${nombre}\nRevisá tu carpeta Descargas.`);
-}
-async function compartirBackup(soloActId){
-  const {blob,nombre}=armarBackup(soloActId);
-  const archivo=new File([blob], nombre, {type:'application/json'});
-  if(navigator.canShare && navigator.canShare({files:[archivo]})){
-    try{ await navigator.share({files:[archivo], title:'Respaldo AsistEXT'}); }
-    catch(e){ /* usuario canceló */ }
-  } else {
-    alert('Este navegador no permite compartir archivos. Se descargará el respaldo; subilo a Drive desde tu carpeta Descargas.');
-    descargarBackup(true, soloActId);
+async function prepararCarnets(){
+  const claseId=document.getElementById('selClaseAlum').value;
+  const nomina=DB.alumnos.filter(a=>a.claseId===claseId).sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
+  if(!nomina.length){ alert('La nómina está vacía.'); return; }
+  gridCarnets.innerHTML='';
+  for(const a of nomina){
+    const cv=await renderCarnetCanvas(a);
+    const d=document.createElement('div'); const im=document.createElement('img');
+    im.src=cv.toDataURL('image/png'); im.style.width='100%'; im.style.borderRadius='10px'; im.style.border='1px solid var(--linea)';
+    d.appendChild(im); gridCarnets.appendChild(d);
   }
+  irVista('v-carnets'); marcarParaImpresion('v-carnets');
+}
+
+/* ---------- Informes ---------- */
+function renderInforme(){
+  const claseId=document.getElementById('selClaseInf').value;
+  const cl=DB.clases.find(c=>c.id===claseId);
+  if(!cl){ cuerpoInforme.innerHTML=`<div class="tarjeta"><div class="vacio">Seleccioná una materia.</div></div>`; return; }
+  const tipo=tipoInforme.value;
+  if(tipo==='alumno') infAlumno(claseId, cl);
+  else if(tipo==='sesion') infSesion(claseId, cl);
+  else infPlanilla(claseId, cl);
+}
+function infAlumno(claseId, cl){
+  const ses=sesionesCerradas(claseId);
+  const nomina=DB.alumnos.filter(a=>a.claseId===claseId).sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
+  cuerpoInforme.innerHTML=`<div class="tarjeta">
+    <h3>${esc(cl.nombre)} — asistencia</h3>
+    <div style="font-size:13px;color:var(--gris);margin-bottom:8px">${ses.length} sesión(es) cerrada(s) · regularidad ≥ ${DB.config.minAsist}%</div>
+    ${nomina.length? nomina.map(a=>{
+      const pct=pctAsistencia(a.id,claseId);
+      if(pct===null) return `<div class="item"><div class="cuerpo"><div class="l1">${esc(a.nombre)}</div><div class="l2">Sin sesiones cerradas aún</div></div></div>`;
+      const pres=ses.filter(s=>{const r=DB.registros.find(x=>x.sesionId===s.id&&x.alumnoId===a.id);return r&&r.estado!=='AUSENTE';}).length;
+      return `<div class="item"><div class="cuerpo">
+        <div class="l1"><span class="sem ${semAsist(pct)}"></span>${esc(a.nombre)} ${pct>=DB.config.minAsist?'':'<span class="chip ausente">EN RIESGO</span>'}</div>
+        <div class="l2">${pres}/${ses.length} sesiones · <b>${pct}%</b>${a.carrera?' · '+esc(a.carrera):''}</div>
+        <div class="barra"><div style="width:${pct}%"></div></div></div></div>`;
+    }).join('') : '<div class="vacio">Nómina vacía.</div>'}
+  </div>`;
+}
+function infSesion(claseId, cl){
+  const ses=DB.sesiones.filter(s=>s.claseId===claseId).sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  cuerpoInforme.innerHTML=`<div class="tarjeta"><h3>${esc(cl.nombre)} — por sesión</h3>
+    <div class="tabla-scroll"><table class="rep"><tr><th>Fecha</th><th>Tema</th><th class="c">Pres.</th><th class="c">Tarde</th><th class="c">Just.</th><th class="c">Aus.</th><th class="c">Estado</th></tr>
+    ${ses.length? ses.map(s=>{
+      const regs=DB.registros.filter(r=>r.sesionId===s.id);
+      const pres=regs.filter(r=>r.estado==='PRESENTE').length;
+      const tarde=regs.filter(r=>r.estado==='TARDE').length;
+      const just=regs.filter(r=>r.estado==='JUSTIFICADA').length;
+      const aus=regs.filter(r=>r.estado==='AUSENTE').length;
+      return `<tr><td>${fmtFecha(s.fecha)}</td><td>${esc(s.tema)||'—'}</td><td class="c">${pres}</td><td class="c">${tarde}</td><td class="c">${just}</td><td class="c">${aus}</td><td class="c"><span class="chip ${s.estado}">${s.estado}</span></td></tr>`;
+    }).join('') : '<tr><td colspan="7">Sin sesiones</td></tr>'}
+    </table></div></div>`;
+}
+function infPlanilla(claseId, cl){
+  const ses=DB.sesiones.filter(s=>s.claseId===claseId).sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  const nomina=DB.alumnos.filter(a=>a.claseId===claseId).sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
+  const sigla={PRESENTE:'P',TARDE:'T',AUSENTE:'A',JUSTIFICADA:'J',RETIRADO:'R',EN_CURSO:'•'};
+  cuerpoInforme.innerHTML=`<div class="tarjeta"><h3>${esc(cl.nombre)} — planilla general</h3>
+    <p style="font-size:12px;color:var(--gris)">P presente · T tarde · J justificada · A ausente · R retirado</p>
+    <div class="tabla-scroll"><table class="rep"><tr><th>Alumno</th>${ses.map(s=>`<th class="c">${s.fecha.slice(8,10)}/${s.fecha.slice(5,7)}</th>`).join('')}<th class="c">%</th></tr>
+    ${nomina.length? nomina.map(a=>{
+      const pct=pctAsistencia(a.id,claseId);
+      return `<tr><td>${esc(a.nombre)}</td>${ses.map(s=>{
+        const r=DB.registros.find(x=>x.sesionId===s.id&&x.alumnoId===a.id);
+        const sg = r?(sigla[r.estado]||'?'):(s.estado==='cerrada'?'A':'–');
+        const col = sg==='P'?'var(--verde)':(sg==='T'?'var(--amarillo)':(sg==='J'?'#2A5B9E':(sg==='A'?'var(--rojo)':(sg==='R'?'var(--violeta)':'var(--gris)'))));
+        return `<td class="c" style="font-weight:700;color:${col}">${sg}</td>`;
+      }).join('')}<td class="c"><b>${pct===null?'—':pct+'%'}</b></td></tr>`;
+    }).join('') : `<tr><td colspan="${ses.length+2}">Nómina vacía</td></tr>`}
+    </table></div></div>`;
+}
+
+/* ================================================================
+   Exportación de informes — Excel (CSV), Word (.doc) y PDF (impresión)
+   Sin librerías externas: funciona sin conexión.
+================================================================ */
+const ETIQUETA_ESTADO={PRESENTE:'Presente',TARDE:'Tarde',AUSENTE:'Ausente',JUSTIFICADA:'Justificada',RETIRADO:'Retirado',EN_CURSO:'En curso'};
+
+/* Devuelve {titulo, encabezados:[...], filas:[[...],...], notas} para el tipo pedido */
+function construirTablaInforme(tipo, claseId){
+  const cl=DB.clases.find(c=>c.id===claseId);
+  const nomina=DB.alumnos.filter(a=>a.claseId===claseId).sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
+  if(tipo==='alumno'){
+    const ses=sesionesCerradas(claseId);
+    const filas=nomina.map(a=>{
+      const pct=pctAsistencia(a.id,claseId);
+      const pres=ses.filter(s=>{const r=DB.registros.find(x=>x.sesionId===s.id&&x.alumnoId===a.id);return r&&ESTADOS_PRESENTE.includes(r.estado);}).length;
+      return [a.nombre, etDoc(a)+' '+a.doc, a.carrera||'', pct===null?'—':pres, pct===null?'—':ses.length,
+              pct===null?'sin sesiones':pct+'%', pct===null?'—':(pct>=DB.config.minAsist?'Regular':'En riesgo')];
+    });
+    return {titulo:`Asistencia por alumno — ${cl.nombre}`,
+      encabezados:['Alumno','Documento','Carrera','Sesiones asistidas','Total sesiones','% Asistencia','Situación'],
+      filas, notas:`${ses.length} sesión(es) cerrada(s) · regularidad ≥ ${DB.config.minAsist}%`};
+  }
+  if(tipo==='sesion'){
+    const ses=DB.sesiones.filter(s=>s.claseId===claseId).sort((a,b)=>b.fecha.localeCompare(a.fecha));
+    const filas=ses.map(s=>{
+      const regs=DB.registros.filter(r=>r.sesionId===s.id);
+      const c=e=>regs.filter(r=>r.estado===e).length;
+      return [fmtFecha(s.fecha), s.tema||'—', c('PRESENTE'), c('TARDE'), c('JUSTIFICADA'), c('AUSENTE'), s.estado];
+    });
+    return {titulo:`Asistencia por sesión — ${cl.nombre}`,
+      encabezados:['Fecha','Tema','Presentes','Tarde','Justificadas','Ausentes','Estado'], filas, notas:''};
+  }
+  // planilla
+  const ses=DB.sesiones.filter(s=>s.claseId===claseId).sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  const sigla={PRESENTE:'P',TARDE:'T',AUSENTE:'A',JUSTIFICADA:'J',RETIRADO:'R',EN_CURSO:'•'};
+  const filas=nomina.map(a=>{
+    const pct=pctAsistencia(a.id,claseId);
+    const celdas=ses.map(s=>{const r=DB.registros.find(x=>x.sesionId===s.id&&x.alumnoId===a.id);return r?(sigla[r.estado]||'?'):(s.estado==='cerrada'?'A':'–');});
+    return [a.nombre, ...celdas, pct===null?'—':pct+'%'];
+  });
+  return {titulo:`Planilla general — ${cl.nombre}`,
+    encabezados:['Alumno', ...ses.map(s=>s.fecha.slice(8,10)+'/'+s.fecha.slice(5,7)), '% Asist.'],
+    filas, notas:'P presente · T tarde · J justificada · A ausente · R retirado'};
+}
+
+function encabezadoInforme(cl){
+  const c=DB.config, hoy=new Date().toLocaleDateString('es-PY',{day:'2-digit',month:'long',year:'numeric'});
+  return {c, hoy, cl,
+    lineas:[c.uni, c.fac, cl.curso?`${cl.nombre} — ${cl.curso}`:cl.nombre, c.filial,
+            c.docente?`Docente: ${c.docente}`:'', `Emitido: ${hoy}`].filter(Boolean)};
+}
+
+function exportarInforme(formato){
+  const claseId=document.getElementById('selClaseInf').value;
+  const cl=DB.clases.find(c=>c.id===claseId);
+  if(!cl){ alert('Seleccioná una materia.'); return; }
+  const tipo=document.getElementById('tipoInforme').value;
+  const t=construirTablaInforme(tipo, claseId);
+  if(!t.filas.length){ alert('No hay datos para exportar en este informe.'); return; }
+  if(formato==='excel') exportarInformeCSV(t, cl);
+  else if(formato==='word') exportarInformeWord(t, cl);
+  else exportarInformePDF(t, cl);
+}
+
+/* --- Excel: CSV con BOM y separador ';' (Excel lo abre en columnas, con tildes) --- */
+function exportarInformeCSV(t, cl){
+  const h=encabezadoInforme(cl);
+  const esc=v=>{ v=String(v==null?'':v); return /[";\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; };
+  const filas=[];
+  h.lineas.forEach(l=>filas.push([l]));
+  filas.push([]); filas.push([t.titulo]);
+  if(t.notas) filas.push([t.notas]);
+  filas.push([]);
+  filas.push(t.encabezados);
+  t.filas.forEach(f=>filas.push(f));
+  const cuerpo='sep=;\n'+filas.map(f=>f.map(esc).join(';')).join('\n');
+  const blob=new Blob(['\uFEFF'+cuerpo], {type:'text/csv;charset=utf-8;'});
+  bajarArchivo(blob, nombreArchivoInforme(t,cl,'csv'));
+}
+
+/* --- Word: HTML con mime de Word (.doc), abre como documento con tabla --- */
+function exportarInformeWord(t, cl){
+  const h=encabezadoInforme(cl);
+  const th=t.encabezados.map(e=>`<th style="background:#1B3A6B;color:#fff;border:1px solid #7f9;padding:5px 8px;font-size:12px">${esc(e)}</th>`).join('');
+  const filas=t.filas.map(f=>`<tr>${f.map((v,i)=>`<td style="border:1px solid #ccc;padding:4px 8px;font-size:12px;${i>0?'text-align:center':''}">${esc(v)}</td>`).join('')}</tr>`).join('');
+  const cab=h.lineas.map((l,i)=>`<div style="${i===0?'font-size:16px;font-weight:bold;color:#1B3A6B':'font-size:12px;color:#333'}">${esc(l)}</div>`).join('');
+  const html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"></head><body>
+    <div style="text-align:center;margin-bottom:10px">${cab}</div>
+    <h2 style="color:#1B3A6B;font-size:15px;border-bottom:2px solid #1B3A6B;padding-bottom:4px">${esc(t.titulo)}</h2>
+    ${t.notas?`<p style="font-size:11px;color:#555">${esc(t.notas)}</p>`:''}
+    <table style="border-collapse:collapse;width:100%"><tr>${th}</tr>${filas}</table>
+    <p style="font-size:10px;color:#888;margin-top:14px">Generado con AsistClase — ${h.hoy}</p>
+  </body></html>`;
+  const blob=new Blob(['\uFEFF'+html], {type:'application/msword'});
+  bajarArchivo(blob, nombreArchivoInforme(t,cl,'doc'));
+}
+
+/* --- PDF: arma una vista imprimible y abre el diálogo (Guardar como PDF) --- */
+function exportarInformePDF(t, cl){
+  const h=encabezadoInforme(cl);
+  const th=t.encabezados.map(e=>`<th>${esc(e)}</th>`).join('');
+  const filas=t.filas.map(f=>`<tr>${f.map((v,i)=>`<td class="${i>0?'c':''}">${esc(v)}</td>`).join('')}</tr>`).join('');
+  const cab=h.lineas.map((l,i)=>`<div class="${i===0?'t1':'t2'}">${esc(l)}</div>`).join('');
+  document.getElementById('informePrintable').innerHTML=`
+    <style>
+      #v-informe-print .cab{text-align:center;margin-bottom:12px}
+      #v-informe-print .t1{font-size:18px;font-weight:800;color:#1B3A6B}
+      #v-informe-print .t2{font-size:12px;color:#333}
+      #v-informe-print h2{color:#1B3A6B;font-size:16px;border-bottom:2px solid #1B3A6B;padding-bottom:5px;margin:8px 0}
+      #v-informe-print .notas{font-size:11px;color:#555;margin-bottom:8px}
+      #v-informe-print table{border-collapse:collapse;width:100%}
+      #v-informe-print th{background:#1B3A6B;color:#fff;padding:6px 8px;font-size:11px;border:1px solid #1B3A6B;text-align:left}
+      #v-informe-print td{border:1px solid #ccc;padding:4px 8px;font-size:11px}
+      #v-informe-print td.c{text-align:center}
+      #v-informe-print tr:nth-child(even) td{background:#F4F6FA}
+      #v-informe-print .pie{font-size:10px;color:#888;margin-top:14px}
+    </style>
+    <div class="cab">${cab}</div>
+    <h2>${esc(t.titulo)}</h2>
+    ${t.notas?`<div class="notas">${esc(t.notas)}</div>`:''}
+    <table><tr>${th}</tr>${filas}</table>
+    <div class="pie">Generado con AsistClase — ${h.hoy}</div>`;
+  document.querySelectorAll('.vista').forEach(v=>v.classList.remove('print-obj'));
+  document.getElementById('v-informe-print').classList.add('print-obj');
+  setTimeout(()=>window.print(), 60);
+}
+
+function nombreArchivoInforme(t, cl, ext){
+  const limpio=s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,'_').replace(/^_|_$/g,'');
+  const stamp=new Date().toISOString().slice(0,10);
+  const tipo=document.getElementById('tipoInforme').value;
+  return `informe_${tipo}_${limpio(cl.nombre)}_${stamp}.${ext}`;
+}
+
+function armarBackup(soloSesionId){
+  const stamp=new Date().toISOString().slice(0,16).replace('T','_').replace(':','');
+  let data;
+  if(soloSesionId){
+    const s=DB.sesiones.find(x=>x.id===soloSesionId);
+    data={app:'asistclase', tipo:'sesion', generado:new Date().toISOString(), config:DB.config,
+      clase:DB.clases.find(c=>c.id===s.claseId), sesion:s,
+      alumnos:DB.alumnos.filter(a=>a.claseId===s.claseId), registros:DB.registros.filter(r=>r.sesionId===soloSesionId)};
+  } else data=Object.assign({app:'asistclase', tipo:'completo', generado:new Date().toISOString()}, DB);
+  return {blob:new Blob([JSON.stringify(data,null,1)],{type:'application/json'}), nombre:`asistclase_${soloSesionId?'sesion':'backup'}_${stamp}.json`};
+}
+function descargarBackup(silencioso, soloSesionId){
+  const {blob,nombre}=armarBackup(soloSesionId); bajarArchivo(blob,nombre);
+  if(!silencioso) alert(`Respaldo descargado: ${nombre}`);
+}
+async function compartirBackup(soloSesionId){
+  const {blob,nombre}=armarBackup(soloSesionId);
+  await compartirArchivo(blob,nombre,'Respaldo AsistClase');
 }
 function restaurarBackup(inp){
   const f=inp.files[0]; if(!f) return;
@@ -1067,73 +1365,69 @@ function restaurarBackup(inp){
   r.onload=()=>{
     try{
       const d=JSON.parse(r.result);
-      if(d.tipo==='actividad'){
-        if(!confirm(`El archivo contiene el cierre de "${d.actividad?.nombre}". ¿Fusionar con los datos actuales?`)) return;
-        d.alumnos.forEach(a=>{ if(!DB.alumnos.some(x=>x.legajo===a.legajo)) DB.alumnos.push(a); });
-        if(d.actividad && !DB.actividades.some(x=>x.id===d.actividad.id)) DB.actividades.push(d.actividad);
+      if(d.app!=='asistclase') throw new Error('El archivo no es un respaldo de AsistClase.');
+      if(d.tipo==='sesion'){
+        if(!confirm(`El archivo contiene la sesión del ${fmtFecha(d.sesion?.fecha)} de "${d.clase?.nombre}". ¿Fusionar?`)) return;
+        if(d.clase && !DB.clases.some(c=>c.id===d.clase.id)) DB.clases.push(d.clase);
+        d.alumnos.forEach(a=>{ if(!DB.alumnos.some(x=>x.id===a.id)) DB.alumnos.push(a); });
+        if(d.sesion && !DB.sesiones.some(s=>s.id===d.sesion.id)) DB.sesiones.push(d.sesion);
         d.registros.forEach(rg=>{ if(!DB.registros.some(x=>x.id===rg.id)) DB.registros.push(rg); });
       } else {
-        if(!Array.isArray(d.alumnos)||!Array.isArray(d.actividades)) throw new Error('Formato no reconocido');
+        if(!Array.isArray(d.clases)||!Array.isArray(d.alumnos)) throw new Error('Formato no reconocido.');
         if(!confirm('El respaldo completo REEMPLAZARÁ todos los datos actuales. ¿Continuar?')) return;
-        DB={config:d.config||DB.config, alumnos:d.alumnos, actividades:d.actividades, registros:d.registros||[]};
+        DB={config:Object.assign(DB.config,d.config||{}), clases:d.clases, alumnos:d.alumnos, sesiones:d.sesiones||[], registros:d.registros||[]};
       }
-      guardar(); aplicarIdentidad(); alert('Datos restaurados correctamente.'); irVista('v-registro');
-    }catch(e){ alert('El archivo no es un respaldo válido: '+e.message); }
+      guardar(); aplicarIdentidad(); alert('Datos restaurados.'); irVista('v-tomar');
+    }catch(e){ alert('No se pudo restaurar: '+e.message); }
     inp.value='';
   };
   r.readAsText(f);
 }
 
-/* ---------- Lector USB: captura global por ráfaga de teclas ----------
-   Un lector USB (OTG en el móvil o directo en laptop) actúa como teclado:
-   escribe el legajo en ráfaga (<60 ms por tecla) y termina con Enter.
-   Esta captura funciona SIN foco en ningún campo: escaneás directamente. */
-let bufScanUSB=[];
-function registrarTecla(key, ts){
-  const el=document.activeElement;
-  const enCampo = el && ['INPUT','TEXTAREA','SELECT'].includes(el.tagName);
-  if(enCampo){ bufScanUSB=[]; return; }   // si hay un campo con foco, manda ese campo
-  if(key==='Enter'){
-    if(bufScanUSB.length>=3){
-      const dur = ts - bufScanUSB[0].ts;
-      if(dur < bufScanUSB.length*60){      // firma de escáner: ráfaga veloz
-        let val = bufScanUSB.map(b=>b.k).join('');
-        if(val.startsWith('ASISTQR|')) val=val.split('|')[1]||val;
-        const contexto = (veloModal.classList.contains('act') && document.getElementById('inputBarrido')) ? 'barrido'
-                       : (document.getElementById('v-registro').classList.contains('act') ? 'registro' : null);
-        if(contexto) procesarLegajo(val, contexto);
-      }
-    }
-    bufScanUSB=[]; return;
-  }
-  if(key && key.length===1){
-    if(bufScanUSB.length && ts - bufScanUSB[bufScanUSB.length-1].ts > 300) bufScanUSB=[];
-    bufScanUSB.push({k:key, ts});
-  }
+/* ---------- Padrón compartido ---------- */
+function exportarPadron(compartir){
+  if(!DB.alumnos.length){ alert('No hay alumnos en ninguna nómina.'); return; }
+  // Deduplica personas por documento entre todas las materias
+  const vistos=new Set(), personas=[];
+  DB.alumnos.forEach(a=>{
+    const clave=(a.tipoDoc||'legajo')+'|'+a.doc; if(vistos.has(clave)) return; vistos.add(clave);
+    personas.push({doc:a.doc, tipoDoc:a.tipoDoc||'legajo', nombre:a.nombre, carrera:a.carrera||'', institucion:a.institucion||'', foto:a.foto||'', tel:a.tel||'', email:a.email||''});
+  });
+  const {blob,nombre}=armarPadronCompartido(personas, DB.config);
+  if(compartir) compartirArchivo(blob,nombre,'Padrón compartido');
+  else { bajarArchivo(blob,nombre); alert(`Padrón exportado: ${nombre}\n${personas.length} persona(s). Compatible con AsistEXT, CarnetEXT y CertEXT.`); }
 }
-document.addEventListener('keydown', e=>registrarTecla(e.key, Date.now()));
-
-/* ---------- Beep de confirmación (operación sin mirar la pantalla) ---------- */
-function beepScan(tipo){
-  try{
-    const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
-    beepScan.ctx = beepScan.ctx || new AC();
-    const ctx=beepScan.ctx, o=ctx.createOscillator(), g=ctx.createGain();
-    o.connect(g); g.connect(ctx.destination);
-    o.frequency.value = tipo==='ok' ? 1050 : (tipo==='info' ? 650 : 260);
-    g.gain.setValueAtTime(0.15, ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.18);
-    o.start(); o.stop(ctx.currentTime+0.2);
-  }catch(e){}
+function importarPadronCompartido(inp){
+  const f=inp.files[0]; if(!f) return;
+  const claseDestino=document.getElementById('cfgClaseDestino').value;
+  if(!claseDestino){ alert('Elegí la materia de destino para la nómina.'); inp.value=''; return; }
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const {personas, origen, config}=leerPadronUniversal(JSON.parse(r.result));
+      if(config && config.logo && !DB.config.logo) DB.config.logo=config.logo;
+      let nuevos=0, actualizados=0;
+      personas.forEach(p=>{
+        const ex=DB.alumnos.find(a=>a.claseId===claseDestino && a.doc===p.doc && (a.tipoDoc||'legajo')===p.tipoDoc);
+        if(ex){ const d={nombre:ex.nombre,carrera:ex.carrera||'',institucion:ex.institucion||'',foto:ex.foto||'',tel:ex.tel||'',email:ex.email||''};
+          if(fusionarPersona(d,p)){ Object.assign(ex,d); actualizados++; } }
+        else { DB.alumnos.push({id:uid(), claseId:claseDestino, doc:p.doc, tipoDoc:p.tipoDoc, nombre:p.nombre, carrera:p.carrera, institucion:p.institucion, foto:p.foto, tel:p.tel, email:p.email}); nuevos++; }
+      });
+      guardar(); aplicarIdentidad();
+      alert(`Padrón importado desde ${origen}.\n${nuevos} nuevo(s) · ${actualizados} actualizado(s) en la materia de destino.`);
+      if(document.getElementById('v-alumnos').classList.contains('act')) renderAlumnos();
+    }catch(e){ alert('No se pudo importar: '+e.message); }
+    inp.value='';
+  };
+  r.readAsText(f);
 }
 
 /* ---------- Inicio ---------- */
 document.addEventListener('DOMContentLoaded', ()=>{
   cargarDB(); aplicarIdentidad();
-  inputManual.addEventListener('keydown', e=>{
-    if(e.key==='Enter'){ procesarLegajo(inputManual.value,'registro'); inputManual.value=''; }
-  });
-  renderRegistro();
+  inputManual.addEventListener('keydown', e=>{ if(e.key==='Enter'){ procesarDoc(inputManual.value,'registro'); inputManual.value=''; }});
+  document.addEventListener('keydown', e=>registrarTecla(e.key, Date.now()));
+  renderTomar();
 });
 window.addEventListener('afterprint', ()=>{ document.querySelectorAll('.vista').forEach(v=>v.classList.remove('print-obj')); });
 </script>
